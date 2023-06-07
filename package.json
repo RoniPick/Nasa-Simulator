@@ -2,14 +2,14 @@
   "name": "nasa-simulator",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "type": "module",
+  "main": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@azure/event-hubs": "^5.10.0",
     "ioredis": "^5.3.2"
   }
 }
