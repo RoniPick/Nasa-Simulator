@@ -1,22 +1,68 @@
 const Redis = require('ioredis');
-const fs = require('fs');
-const { EventHubProducerClient } = require("@azure/event-hubs");
+const { EventHubProducerClient, EventHubConsumerClient } = require("@azure/event-hubs");
+const { Client } = require('@elastic/elasticsearch');
+const axios = require('axios');
 
-// npm install @azure/event-hubs
+async function createConsumerGroup() {
+    const connectionString = "Endpoint=sb://kafka-nasa.servicebus.windows.net/;SharedAccessKeyName=nasa-policy;SharedAccessKey=d4RzTWnoaJHRXgy1fKYXBj6akR2AFz+0u+AEhE9/55I=;EntityPath=nasa-data";
+    const eventHubName = "nasa-data";
+    const consumerGroup = "$Default"; // Replace with your desired consumer group name
 
+    const consumerClient = new EventHubConsumerClient(consumerGroup, connectionString, eventHubName);
+    console.log("Consumer group created:", consumerGroup);
 
-function Simulator() {
-    const connectionString = "Endpoint=sb://kafka-nasa.servicebus.windows.net/;SharedAccessKeyName=nasa-policy;SharedAccessKey=d4RzTWnoaJHRXgy1fKYXBj6akR2AFz+0u+AEhE9/55I=;EntityPath=kafka-nasa";
-    const eventHubName = "kafka-nasa";
+    // Start receiving events from the event hub
+    const subscription = consumerClient.subscribe({
+        processEvents: async (events, context) => {
+            for (const event of events) {
+                console.log("Received event:", event.body);
+                await sendEventToElasticSearch(event.body, subscription, consumerClient);
+            }
+            context.updateCheckpoint(events[events.length - 1].offset);
+        },
+        processError: async (error, context) => {
+            console.error("Error receiving events:", error);
+            context.updateCheckpoint().catch(console.error);
+        }
+    });
+
+    // Wait for a while to receive events
+    await new Promise(resolve => setTimeout(resolve, 30000));
+
+    // Stop receiving events and close the consumer client
+    await subscription.close();
+    await consumerClient.close();
+}
+
+async function sendEventToElasticSearch(eventBody, subscription, consumerClient) {
+    try {
+        const elasticSearchConfig = {
+            node: 'https://r1x0rdsre0:anu5034q9c@events-data-1012553474.us-east-1.bonsaisearch.net:443',
+        };
+
+        const elasticSearchClient = new Client(elasticSearchConfig);
+        //print the data of the eventbody
+        console.log("Event body:", eventBody);
+
+        const { body } = await elasticSearchClient.index({
+            //print the body of the event
+            index: 'nasa',
+            body: eventBody
+        });
+
+        console.log("Event sent to ElasticSearch:", body);
+    } catch (error) {
+        console.log("Error sending event to ElasticSearch:", error);
+    }
+    await subscription.close();
+    await consumerClient.close();
+}
+
+async function Simulator() {
+    const connectionString = "Endpoint=sb://kafka-nasa.servicebus.windows.net/;SharedAccessKeyName=nasa-policy;SharedAccessKey=d4RzTWnoaJHRXgy1fKYXBj6akR2AFz+0u+AEhE9/55I=;EntityPath=nasa-data";
+    const eventHubName = "nasa-data";
     const eventHubProducerClient = new EventHubProducerClient(connectionString, eventHubName);
     console.log("Created event hub producer client");
-    async function sendEvent(eventBody) {
-        const eventData = { body: eventBody };
-        console.log("Sending event: ", eventData);
-        const batch = await eventHubProducerClient.createBatch();
-        batch.tryAdd(eventData);
-        await eventHubProducerClient.sendBatch(batch);
-    }
 
     const redis = new Redis("redis://default:6603de326e414020a35aee64c592604a@engaging-flamingo-37264.upstash.io:37264");
 
@@ -37,17 +83,14 @@ function Simulator() {
         });
     }
 
-     // Function to generate random integer within a range
     function getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    // Function to select a random element from an array
     function getRandomElement(array) {
         return array[Math.floor(Math.random() * array.length)];
     }
 
-    // Array of informing factors
     const informingFactors = [
         'MMT',
         'Gemini Observatory Telescopes',
@@ -63,10 +106,8 @@ function Simulator() {
         'European Extremely Large Telescope'
     ];
 
-    // Array of event types
     const eventTypes = ['GRB', 'Apparent Brightness Rise', 'UV Rise', 'X-Ray Rise', 'Comet'];
 
-    // Generate random values
     const utc = new Date().toISOString();
     const informingFactor = getRandomElement(informingFactors);
     const eventType = getRandomElement(eventTypes);
@@ -80,7 +121,6 @@ function Simulator() {
         console.log('Event Type:', eventType);
         console.log('Severity Level:', severityLevel);
 
-        // Create a JSON object
         const event = {
             utc: utc,
             informingFactor: informingFactor,
@@ -91,16 +131,30 @@ function Simulator() {
             eventType: eventType,
             severityLevel: severityLevel
         };
-        //sendEvent(event);
 
-        // Use the event object as needed
+        sendEvent(event);
     });
+
+    async function sendEvent(eventBody) {
+        try {
+            const eventData = { body: eventBody };
+            console.log("Sending event:", eventData);
+            const batch = await eventHubProducerClient.createBatch();
+            batch.tryAdd(eventData);
+            await eventHubProducerClient.sendBatch(batch);
+        } catch (error) {
+            console.log("Error sending event to Event Hub", error);
+        }
+    }
 
     redis.on('error', (error) => {
         console.error('Redis error:', error);
     });
 
-
+    // Create the consumer group and start receiving events
+    await createConsumerGroup();
 }
 
-Simulator();
+Simulator().catch((error) => {
+    console.log("Error in the simulator:", error);
+});
