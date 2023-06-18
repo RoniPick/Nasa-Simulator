@@ -2,6 +2,7 @@ const Redis = require('ioredis');
 const { EventHubProducerClient, EventHubConsumerClient } = require("@azure/event-hubs");
 const { Client } = require('@elastic/elasticsearch');
 const axios = require('axios');
+const { system } = require('nodemon/lib/config');
 
 async function createConsumerGroup() {
     const connectionString = "Endpoint=sb://kafka-nasa.servicebus.windows.net/;SharedAccessKeyName=nasa-policy;SharedAccessKey=d4RzTWnoaJHRXgy1fKYXBj6akR2AFz+0u+AEhE9/55I=;EntityPath=nasa-data";
@@ -14,11 +15,16 @@ async function createConsumerGroup() {
     // Start receiving events from the event hub
     const subscription = consumerClient.subscribe({
         processEvents: async (events, context) => {
+            console.log("Receivedd events: ", events.length);
             for (const event of events) {
                 console.log("Received event:", event.body);
-                await sendEventToElasticSearch(event.body, subscription, consumerClient);
+                await sendEventToElasticSearch(event.body, context, event.offset, event.sequenceNumber);
             }
-            context.updateCheckpoint(events[events.length - 1].offset);
+            if (events.length > 0) {
+                console.log("Updating checkpoint:", events[events.length - 1].sequenceNumber);
+                await context.updateCheckpoint(events[events.length - 1]);
+            }
+
         },
         processError: async (error, context) => {
             console.error("Error receiving events:", error);
@@ -34,29 +40,29 @@ async function createConsumerGroup() {
     await consumerClient.close();
 }
 
-async function sendEventToElasticSearch(eventBody, subscription, consumerClient) {
+const { exec } = require('child_process');
+
+async function sendEventToElasticSearch(eventBody, context, offset, sequenceNumber) {
     try {
-        const elasticSearchConfig = {
-            node: 'https://r1x0rdsre0:anu5034q9c@events-data-1012553474.us-east-1.bonsaisearch.net:443',
-        };
+        const elasticSearchEndpoint = 'https://r1x0rdsre0:anu5034q9c@events-data-1012553474.us-east-1.bonsaisearch.net:443/nasa/_doc';
+        const curlCommand = `curl -X POST ${elasticSearchEndpoint} -H "Content-Type: application/json" -d '${JSON.stringify(eventBody)}'`;
 
-        const elasticSearchClient = new Client(elasticSearchConfig);
-        //print the data of the eventbody
-        console.log("Event body:", eventBody);
-
-        const { body } = await elasticSearchClient.index({
-            //print the body of the event
-            index: 'nasa',
-            body: eventBody
+        exec(curlCommand, (error, stdout, stderr) => {
+            if (error) {
+                console.error("Error sending event to ElasticSearch:", error);
+                return;
+            }
+            console.log("Event sent to ElasticSearch");
+            console.log("Response:", stdout);
+            context.updateCheckpoint({ offset, sequenceNumber }).catch(console.error);
         });
-
-        console.log("Event sent to ElasticSearch:", body);
     } catch (error) {
         console.log("Error sending event to ElasticSearch:", error);
     }
-    await subscription.close();
-    await consumerClient.close();
+    
 }
+
+
 
 async function Simulator() {
     const connectionString = "Endpoint=sb://kafka-nasa.servicebus.windows.net/;SharedAccessKeyName=nasa-policy;SharedAccessKey=d4RzTWnoaJHRXgy1fKYXBj6akR2AFz+0u+AEhE9/55I=;EntityPath=nasa-data";
