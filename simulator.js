@@ -5,8 +5,8 @@ const axios = require('axios');
 const { system } = require('nodemon/lib/config');
 
 async function createConsumerGroup() {
-    const connectionString = "Endpoint=sb://kafka-nasa.servicebus.windows.net/;SharedAccessKeyName=nasa-policy;SharedAccessKey=d4RzTWnoaJHRXgy1fKYXBj6akR2AFz+0u+AEhE9/55I=;EntityPath=nasa-data";
-    const eventHubName = "nasa-data";
+    const connectionString = "Endpoint=sb://kafka-nasa-1.servicebus.windows.net/;SharedAccessKeyName=kafka-nasa-policy;SharedAccessKey=FtS1DfsSt89DaQB1NWxWEjwnyxeX8wnka+AEhBRZQi0=;EntityPath=nasa-data-1";
+    const eventHubName = "nasa-data-1";
     const consumerGroup = "$Default"; // Replace with your desired consumer group name
 
     const consumerClient = new EventHubConsumerClient(consumerGroup, connectionString, eventHubName);
@@ -15,7 +15,7 @@ async function createConsumerGroup() {
     // Start receiving events from the event hub
     const subscription = consumerClient.subscribe({
         processEvents: async (events, context) => {
-            console.log("Receivedd events: ", events.length);
+            console.log("Receivedd eventss: ", events.length);
             for (const event of events) {
                 console.log("Received event:", event.body);
                 await sendEventToElasticSearch(event.body, context, event.offset, event.sequenceNumber);
@@ -65,8 +65,8 @@ async function sendEventToElasticSearch(eventBody, context, offset, sequenceNumb
 
 
 async function Simulator() {
-    const connectionString = "Endpoint=sb://kafka-nasa.servicebus.windows.net/;SharedAccessKeyName=nasa-policy;SharedAccessKey=d4RzTWnoaJHRXgy1fKYXBj6akR2AFz+0u+AEhE9/55I=;EntityPath=nasa-data";
-    const eventHubName = "nasa-data";
+    const connectionString = "Endpoint=sb://kafka-nasa-1.servicebus.windows.net/;SharedAccessKeyName=kafka-nasa-policy;SharedAccessKey=FtS1DfsSt89DaQB1NWxWEjwnyxeX8wnka+AEhBRZQi0=;EntityPath=nasa-data-1";
+    const eventHubName = "nasa-data-1";
     const eventHubProducerClient = new EventHubProducerClient(connectionString, eventHubName);
     console.log("Created event hub producer client");
 
@@ -160,7 +160,9 @@ async function Simulator() {
     // Create the consumer group and start receiving events
     await createConsumerGroup();
 }
+for (let i = 0; i < 5; i++) {
 
 Simulator().catch((error) => {
     console.log("Error in the simulator:", error);
 });
+}
