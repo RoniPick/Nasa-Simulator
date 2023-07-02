@@ -83,7 +83,10 @@ async function Simulator() {
                 const randomItem = jsonData[randomIndex];
                 const randomRA = randomItem.RA;
                 const randomDEC = randomItem.DEC;
-                callback(randomRA, randomDEC);
+                const randomTitle= randomItem['Title HD'];
+                callback(randomRA, randomDEC, randomTitle);
+                callback(randomRA, randomDEC, randomTitle);
+
             }
             redis.quit();
         });
@@ -119,13 +122,14 @@ async function Simulator() {
     const eventType = getRandomElement(eventTypes);
     const severityLevel = getRandomInt(1, 5);
 
-    dataRedis((locationRA, locationDEC) => {
+    dataRedis((locationRA, locationDEC, Title) => {
         console.log('UTC:', utc);
         console.log('Informing Factor:', informingFactor);
         console.log('Location (RA):', locationRA);
         console.log('Location (DEC):', locationDEC);
         console.log('Event Type:', eventType);
         console.log('Severity Level:', severityLevel);
+        console.log('Title HD:', Title);
 
         const event = {
             utc: utc,
@@ -135,7 +139,8 @@ async function Simulator() {
                 DEC: locationDEC
             },
             eventType: eventType,
-            severityLevel: severityLevel
+            severityLevel: severityLevel,
+            Title: Title
         };
 
         sendEvent(event);
@@ -160,9 +165,9 @@ async function Simulator() {
     // Create the consumer group and start receiving events
     await createConsumerGroup();
 }
-for (let i = 0; i < 5; i++) {
+//for (let i = 0; i < 5; i++) {
 
 Simulator().catch((error) => {
     console.log("Error in the simulator:", error);
 });
-}
+//}

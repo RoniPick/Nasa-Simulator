@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Event Viewer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Event Viewer</h1>
+
+  <h2>Last 5 Events</h2>
+  <div id="lastEvents"></div>
+
+  <h2>Search Events</h2>
+  <form id="searchForm">
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" name="startDate" required>
+    <br>
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" name="endDate" required>
+    <br>
+    <label for="informingFactor">Informing Factor:</label>
+    <input type="text" id="informingFactor" name="informingFactor" required>
+    <br>
+    <button type="submit">Search</button>
+  </form>
+
+  <div id="searchResults"></div>
+
+  <script>
+    // Attach event listener to the search form
+    document.getElementById("searchForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // Prevent form submission
+
+      const startDate = document.getElementById("startDate").value;
+      const endDate = document.getElementById("endDate").value;
+      const informingFactor = document.getElementById("informingFactor").value;
+
+      // Make AJAX request to fetch search results
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", `/data-informingFactors?start_date=${startDate}&end_date=${endDate}&informingFactor=${informingFactor}`);
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          const searchResults = JSON.parse(xhr.responseText);
+
+          // Display search results
+          const searchResultsContainer = document.getElementById("searchResults");
+          searchResultsContainer.innerHTML = ""; // Clear previous results
+
+          if (searchResults.length === 0) {
+            searchResultsContainer.textContent = "No results found.";
+          } else {
+            searchResults.forEach(function(result) {
+              const resultItem = document.createElement("div");
+              resultItem.textContent = JSON.stringify(result);
+              searchResultsContainer.appendChild(resultItem);
+            });
+          }
+        }
+      };
+      xhr.send();
+    });
+
+    // Function to fetch and display the last 5 events
+    function fetchLastEvents() {
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", "/data-5events");
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          const events = JSON.parse(xhr.responseText);
+
+          // Display last 5 events
+          const lastEventsContainer = document.getElementById("lastEvents");
+          lastEventsContainer.innerHTML = ""; // Clear previous events
+
+          if (events.length === 0) {
+            lastEventsContainer.textContent = "No events found.";
+          } else {
+            events.forEach(function(event) {
+              const eventItem = document.createElement("div");
+              eventItem.textContent = JSON.stringify(event);
+              lastEventsContainer.appendChild(eventItem);
+            });
+          }
+        }
+      };
+      xhr.send();
+    }
+
+    // Fetch and display the last 5 events on page load
+    window.onload = function() {
+      fetchLastEvents();
+    };
+  </script>
+</body>
+</html>
