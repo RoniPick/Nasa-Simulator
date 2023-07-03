@@ -14,40 +14,54 @@ const fs = require('fs'); // for reading json files
 const Redis = require('ioredis');
 const cli = require('nodemon/lib/cli');
 
-// Serve the frontend code
-app.use(express.static('public'));
+/*
+If the frontend and backend servers are running on different ports or domains,
+ you might need to enable CORS headers in the backend server to allow cross-origin requests from the frontend.
+*/
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+
 // Define a route
 app.get('/', (req, res) => {
-  //res.send('Hello, World!');
-  res.sendFile(path.join(__dirname, 'Front', 'index.html'));
+  res.send('Hello, World!');
+  // res.sendFile(path.join(__dirname, 'public', 'index.html'));
 
 });
 
 //Get last 5 events
 //http://localhost:3000/data-5events
 app.get('/data-5events', (req, res) => {
-  //res.sendFile(path.join(__dirname, 'Front', 'index.html'));
   const elasticSearchEndpoint = 'https://r1x0rdsre0:anu5034q9c@events-data-1012553474.us-east-1.bonsaisearch.net:443/nasa*/_search';
 
   const curlCommand = `curl -X GET ${elasticSearchEndpoint} -d '{
-        "from":0,"size":5,
-        "sort":{"utc":"desc"},
-        "query": {
-          "match_all": {}
-        }
-      }' -H "Content-Type: application/json" | jq '.hits.hits[]._source'`;
+    "from": 0,
+    "size": 5,
+    "sort": {"utc": "desc"},
+    "query": {"match_all": {}}
+  }' -H "Content-Type: application/json"`;
+
   exec(curlCommand, (error, stdout, stderr) => {
     if (error) {
-      console.error("Error sending event to ElasticSearch:", error);
-      return;
+      console.error("Error sending event to Elasticsearch:", error);
+      return res.status(500).send("Error retrieving data from Elasticsearch");
     }
-    console.log("Get data from ElasticSearch");
-    console.log(stdout.toString());
-    res.end(stdout.toString());
+  
+    try {
+      const data = JSON.parse(stdout);
+      console.log("Retrieved data from Elasticsearch:", data);
 
-    //res.end("Response: " + stdout.toString());
+      res.json(data.hits.hits.map(hit => hit._source));
+    } catch (e) {
+      console.error("Error parsing data from Elasticsearch:", e);
+      res.status(500).send("Error parsing data from Elasticsearch");
+    }
   });
 });
+
 
 //Get events by informing factor and date range
 //http://localhost:3000/data-informingFactors?start_date=6/27/23&end_date=6/28/23&informingFactor=Large Binocular Telescope

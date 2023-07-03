@@ -8,9 +8,44 @@
   <div class="card">
     <h1>Welcome to the Astronomical events Portal!</h1>
     <p>Click the button below to explore data about the Astronomical events.</p>
-    <button id="exploreBtn">Explore Data</button>
+    <button onclick="getData()">Get Data from Backend</button>
   </div>
+  <div id="dataContainer" class="card-container"></div>
+  <script>
+ function getData() {
+  fetch('http://localhost:3000/data-5events')
+    .then(response => response.json())
+    .then(data => {
+      const newWindow = window.open('', '_blank');
+      const newDocument = newWindow.document;
+      newDocument.write('<html><head><title>Astronomical Events</title><link rel="stylesheet" type="text/css" href="styles.css"></head><body>');
 
-  <script src="script.js"></script>
+      // Loop through the data and create card views
+      data.forEach(item => {
+        const itemDiv = newDocument.createElement('div');
+        itemDiv.classList.add('card');
+        const keys = Object.keys(item);
+        keys.forEach(key => {
+          const row = newDocument.createElement('p');
+          const keySpan = newDocument.createElement('span');
+          keySpan.textContent = `${key}: `;
+          const valueSpan = newDocument.createElement('span');
+          valueSpan.textContent = `${item[key]}`;
+          row.appendChild(keySpan);
+          row.appendChild(valueSpan);
+          itemDiv.appendChild(row);
+        });
+        newDocument.body.appendChild(itemDiv);
+      });
+
+      newDocument.write('</body></html>');
+      newDocument.close();
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+}
+
+  </script>
 </body>
 </html>
