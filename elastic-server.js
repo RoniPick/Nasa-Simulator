@@ -2,6 +2,10 @@
 
 const { exec } = require('child_process');
 const express = require('express');
+const pf = require('fs');
+if (!pf.existsSync('./images')) {
+  const pythonfile = exec('python -u sun_information.py');
+}
 const app = express();
 const port = 3000;
 const path = require('path');
@@ -11,7 +15,7 @@ const Redis = require('ioredis');
 const cli = require('nodemon/lib/cli');
 
 // Serve the frontend code
-
+app.use(express.static('public'));
 // Define a route
 app.get('/', (req, res) => {
   //res.send('Hello, World!');
