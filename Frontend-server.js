@@ -6,16 +6,16 @@ const path = require('path');
 const fs = require('fs'); // for reading json files
 const Redis = require('ioredis');
 
-//app.use(express.static('frontend'));
-// Define a route
+app.use(express.static(path.join(__dirname, 'frontend')));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'dashboard.html'));
 });
 
 // Define a route for Astronomical Events
-app.get('/astronomical-events', (req, res) => {
-  res.sendFile(path.join(__dirname, '/frontend/Astronomical_events.html'));
+app.get('/Astronomical-events', (req, res) => {
+// take the html file from the current directory  
+  res.sendFile(path.join(__dirname, 'frontend', 'Astronomical_events.html'));
 });
 
 // Define a route for NASA
