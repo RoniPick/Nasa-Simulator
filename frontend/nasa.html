@@ -47,14 +47,48 @@
             </div>
         </div>
     </div>
+        <script>
+    window.addEventListener('DOMContentLoaded', () => {
+        fetch('http://localhost:4001/nasa')
+            .then(response => response.json())
+            .then(data => {
+                const dataContainer = document.getElementById('dataContainer');
+                const nearEarthObjects = data.near_earth_objects;
 
-    <!-- Tab panes -->
-    <div class="tab-content">
-        <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab" tabindex="0">...</div>
-        <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">...</div>
-        <div class="tab-pane" id="messages" role="tabpanel" aria-labelledby="messages-tab" tabindex="0">...</div>
-        <div class="tab-pane" id="settings" role="tabpanel" aria-labelledby="settings-tab" tabindex="0">...</div>
-    </div>
+                for (const date in nearEarthObjects) {
+                    const objects = nearEarthObjects[date];
+
+                    objects.forEach(item => {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.classList.add('card', 'mb-3', 'mr-3');
+                        itemDiv.style.width = '18rem';
+
+                        const keys = Object.keys(item);
+
+                        keys.forEach(key => {
+                            const row = document.createElement('p');
+                            row.classList.add('mb-0');
+
+                            const keySpan = document.createElement('strong');
+                            keySpan.textContent = `${key}:`;
+
+                            const valueSpan = document.createElement('span');
+                            valueSpan.textContent = `${item[key]}`;
+
+                            row.appendChild(keySpan);
+                            row.appendChild(valueSpan);
+                            itemDiv.appendChild(row);
+                        });
+
+                        dataContainer.appendChild(itemDiv);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+</script>
 </body>
 
 </html>
