@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
   <title>Card Form</title>
@@ -16,10 +16,9 @@
   fetch('http://localhost:3000/data-5events')
     .then(response => response.json())
     .then(data => {
-      const newWindow = window.open('', '_blank');
+      const newWindow = window.open('localhost:4000', '_cards');
       const newDocument = newWindow.document;
       newDocument.write('<html><head><title>Astronomical Events</title><link rel="stylesheet" type="text/css" href="styles.css"></head><body>');
-
       // Loop through the data and create card views
       data.forEach(item => {
         const itemDiv = newDocument.createElement('div');
@@ -48,4 +47,4 @@
 
   </script>
 </body>
-</html>
+</html> -->

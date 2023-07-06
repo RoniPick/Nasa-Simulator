@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+  <title>Nasa Simulator!</title>
+</head>
+
+<body>
+  <h1 class="text-center mt-3">Welcome to the Astronomical Events Portal!</h1>
+
+  <ul class="nav nav-pills nav-fill">
+    <li class="nav-item">
+      <a class="nav-link" href="../frontend/dashboard.html">
+        <i class="fas fa-chart-bar"></i> Dashboard
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page" href="../frontend/Astronomical_events.html" data-toggle="pill">
+        <i class="fas fa-moon"></i> Astronomical events
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="../frontend/nasa.html">
+        <i class="fas fa-rocket"></i> NASA
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="../frontend/sun.html">
+        <i class="fas fa-sun"></i> Sun
+      </a>
+    </li>
+  </ul>
+
+  <div class="container">
+    <div class="row mt-3">
+      <div class="col-sm-12">
+        <h5 class="card-title">Astronomical Events Data</h5>
+        
+        <!-- Query Section -->
+        <div class="mb-3">
+          <h3>Message Search</h3>
+          <form id="searchForm" class="needs-validation" novalidate>
+            <div class="form-group">
+              <label for="starInput">Bright Star:</label>
+              <input type="text" class="form-control" id="starInput" required>
+              <div class="invalid-feedback">Please enter a bright star.</div>
+            </div>
+            <div class="form-group">
+              <label for="startDateInput">Start Date:</label>
+              <input type="date" class="form-control" id="startDateInput" required>
+              <div class="invalid-feedback">Please enter a start date.</div>
+            </div>
+            <div class="form-group">
+              <label for="endDateInput">End Date:</label>
+              <input type="date" class="form-control" id="endDateInput" required>
+              <div class="invalid-feedback">Please enter an end date.</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+          </form>
+        </div>
+        <!-- End of Query Section -->
+
+        <!-- Cards Section -->
+        <div id="dataContainer" class="d-flex flex-row flex-wrap"></div>
+        <!-- End of Cards Section -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function getData() {
+      fetch('http://localhost:3000/data-5events')
+        .then(response => response.json())
+        .then(data => {
+          const dataContainer = document.getElementById('dataContainer');
+          data.forEach(item => {
+            const itemDiv = document.createElement('div');
+            itemDiv.classList.add('card', 'mb-3', 'mr-3');
+            itemDiv.style.width = '18rem';
+            const keys = Object.keys(item);
+
+            keys.forEach(key => {
+              const row = document.createElement('p');
+              row.classList.add('mb-0');
+
+              const keySpan = document.createElement('strong');
+              keySpan.textContent = `${key}:`;
+
+              const valueSpan = document.createElement('span');
+              valueSpan.textContent = `${item[key]}`;
+
+              row.appendChild(keySpan);
+              row.appendChild(valueSpan);
+              itemDiv.appendChild(row);
+            });
+
+            dataContainer.appendChild(itemDiv);
+          });
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+
+    // Call getData() function when the page loads
+    window.addEventListener('DOMContentLoaded', getData);
+
+    // Form submission event listener
+    const searchForm = document.getElementById('searchForm');
+    searchForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      if (searchForm.checkValidity()) {
+        const starInput = document.getElementById('starInput').value;
+        const startDateInput = document.getElementById('startDateInput').value;
+        const endDateInput = document.getElementById('endDateInput').value;
+
+        // Make HTTP request to backend server with the search parameters
+        // Replace the URL below with your actual backend server URL
+        const url = `http://localhost:3000/search?star=${starInput}&startDate=${startDateInput}&endDate=${endDateInput}`;
+        fetch(url)
+          .then(response => response.json())
+          .then(searchResults => {
+            // Process and display the search results
+            const searchResultsContainer = document.getElementById('searchResults');
+            // ...
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      }
+      searchForm.classList.add('was-validated');
+    });
+  </script>
+
+</body>
+
+</html>
