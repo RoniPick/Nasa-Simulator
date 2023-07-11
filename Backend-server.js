@@ -27,7 +27,7 @@ app.use((req, res, next) => {
 
 // Define a route
 app.get('/', (req, res) => {
-  res.send('Hello, World!');
+  //res.send('Hello, World!');
   // res.sendFile(path.join(__dirname, 'public', 'index.html'));
 
 });
