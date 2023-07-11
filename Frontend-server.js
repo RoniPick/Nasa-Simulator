@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'dashboard.html'));
 });
 
-// Define a route for Astronomical Events
+//Define a route for Astronomical Events
 app.get('/Astronomical-events', (req, res) => {
 // take the html file from the current directory  
   res.sendFile(path.join(__dirname, 'frontend', 'Astronomical_events.html'));

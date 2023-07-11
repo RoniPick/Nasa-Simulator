@@ -125,7 +125,7 @@
 
         // Make HTTP request to backend server with the search parameters
         // Replace the URL below with your actual backend server URL
-        const url = `http://localhost:3000/search?star=${starInput}&startDate=${startDateInput}&endDate=${endDateInput}`;
+        const url = `http://localhost:3000/data-brightStar?bright_star=${starInput}&start_date=${startDateInput}&end_date=${endDateInput}`;
         fetch(url)
           .then(response => response.json())
           .then(searchResults => {
