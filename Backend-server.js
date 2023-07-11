@@ -3,9 +3,9 @@
 const { exec } = require('child_process');
 const express = require('express');
 const pf = require('fs');
-if (!pf.existsSync('./images')) {
-  const pythonfile = exec('python -u sun_information.py');
-}
+
+const pythonfile = exec('python -u sun_information.py');
+
 const app = express();
 const port = 3000;
 const path = require('path');
