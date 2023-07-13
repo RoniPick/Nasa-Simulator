@@ -94,8 +94,8 @@
             } else {
               itemDiv.classList.add('bg-success');
             }
-           
 
+           
             const keys = Object.keys(item);
 
             keys.forEach(key => {
@@ -108,6 +108,13 @@
               const valueSpan = document.createElement('span');
               valueSpan.textContent = `${item[key]}`;
               
+              // show the event location as RA and DEC
+              if (key === 'location') {
+                const location = item[key];
+                valueSpan.textContent = `RA: ${location.RA}, DEC: ${location.DEC}`;
+
+              }
+
               row.appendChild(keySpan);
               row.appendChild(valueSpan);
               itemDiv.appendChild(row);
