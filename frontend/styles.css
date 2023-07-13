@@ -11,8 +11,9 @@ body {
 }
 
 .card {
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 10px;
+  /* background-color: rgba(255, 255, 255, 0.8); */
+  background-color: rgb(186, 248, 217);
+  border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   padding: 20px;
   max-width: 400px;
@@ -24,6 +25,8 @@ body {
 h1 {
   font-size: 24px;
   margin-bottom: 10px;
+  font-weight: bold;
+  color:bisque;
 }
 
 p {
@@ -73,3 +76,6 @@ button:hover {
   text-align: center;
 }
 
+.dataContainer{
+  background-color: rgb(186, 248, 217);
+}

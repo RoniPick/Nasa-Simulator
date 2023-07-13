@@ -7,15 +7,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <!-- Bootstrap CSS -->
+  <!-- <link rel="stylesheet" href="styles_deshbord.css"> -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel='stylesheet' href='styles_deshbord.css'>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 
   <title>Nasa Simulator!</title>
 </head>
 
 <body>
-  <h1 class="text-center mt-3">Welcome to the Astronomical Events Portal!</h1>
+  <h1 class="text-center mt-3" style="color: whitesmoke; font-family: Monaco;">Welcome to the Astronomical Events Portal!</h1>
 
   <ul class="nav nav-pills nav-fill">
     <li class="nav-item">
@@ -43,10 +45,10 @@
   <div class="container">
     <div class="row mt-3">
       <div class="col-sm-12">
-        <h5 class="card-title">Astronomical Events Data</h5>
+        <h5 class="card-title" style="color: whitesmoke; font-family: Monaco;">Astronomical Events Data</h5>
         
         <!-- Query Section -->
-        <div class="mb-3">
+        <div class="mb-3" style="color: whitesmoke; font-family: Monaco;">
           <h3>Message Search</h3>
           <form id="searchForm" class="needs-validation" novalidate>
             <div class="form-group">
@@ -70,7 +72,7 @@
         <!-- End of Query Section -->
 
         <!-- Cards Section -->
-        <div id="dataContainer" class="d-flex flex-row flex-wrap"></div>
+        <div id="dataContainer" class="d-flex flex-row flex-wrap" style="font-family: Monaco;"></div>
         <!-- End of Cards Section -->
       </div>
     </div>
@@ -86,6 +88,14 @@
             const itemDiv = document.createElement('div');
             itemDiv.classList.add('card', 'mb-3', 'mr-3');
             itemDiv.style.width = '18rem';
+            if (item['severityLevel'] >= 4) {
+              itemDiv.classList.add('bg-danger');
+              itemDiv.classList.add('zoom-effect');
+            } else {
+              itemDiv.classList.add('bg-success');
+            }
+
+           
             const keys = Object.keys(item);
 
             keys.forEach(key => {
@@ -94,9 +104,16 @@
 
               const keySpan = document.createElement('strong');
               keySpan.textContent = `${key}:`;
-
+              
               const valueSpan = document.createElement('span');
               valueSpan.textContent = `${item[key]}`;
+              
+              // show the event location as RA and DEC
+              if (key === 'location') {
+                const location = item[key];
+                valueSpan.textContent = `RA: ${location.RA}, DEC: ${location.DEC}`;
+
+              }
 
               row.appendChild(keySpan);
               row.appendChild(valueSpan);

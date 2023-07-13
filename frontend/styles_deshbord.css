@@ -1,0 +1,66 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-image: url('solarSystem.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+  
+
+.zoom-in {
+    animation: zoom-in 0.5s forwards;
+  }
+  
+  @keyframes zoom-in {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(1.2);
+    }
+  }
+  
+  .bg-danger {
+    background-color: #dc3545e0!important;;
+  }
+  
+  .bg-success {
+    background-color: #ffffffd4!important;;
+  }
+
+  .zoom-in-out {
+    animation: zoom-in-out 1s forwards;
+  }
+  
+  @keyframes zoom-in-out {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  .zoom-effect {
+    animation: zoom-effect 2s linear infinite;
+  }
+  
+  @keyframes zoom-effect {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
