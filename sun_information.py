@@ -1,12 +1,13 @@
 import os
 import requests
-from PIL import Image
+# from PIL import Image
 from io import BytesIO
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 import base64
 import json
+from selenium.webdriver.chrome.service import Service
 
 """This class purpose is to scrape data from the website https://theskylive.com/sun-info
 and save the data in the following formats:
@@ -19,7 +20,8 @@ at the chosen date. """
 
 
 # Set up Chrome WebDriver
-chrome_driver_path = r'C:\Users\97254\Downloads\chromedriver.exe'
+chrome_driver_path = '/mnt/c/Users/97254/Desktop/Nasa-Simulator/chromedriver.exe'
+
 options = webdriver.ChromeOptions()
 options.add_argument('--headless')  # Run Chrome in headless mode (without GUI)
 driver = webdriver.Chrome(service=Service(chrome_driver_path), options=options)

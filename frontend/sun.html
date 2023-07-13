@@ -11,11 +11,44 @@
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 
+    <style>
+         body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-image: url('solarSystem.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white background for container */
+            padding: 20px;
+        }
+        .image-container img {
+            width: 200px;
+            height: auto;
+            margin: 5px;
+        }
+        
+        .url-container ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .url-container li {
+            margin-bottom: 5px;
+        }
+    </style>
+
     <title>Nasa Simulator!</title>
 </head>
 
 <body>
-    <h1 class="text-center mt-3">Welcome to the Astronomical Events Portal!</h1>
+    <h1 class="text-center mt-3"style="color: white;">Welcome to the Astronomical Events Portal!</h1>
 
     <ul class="nav nav-pills nav-fill">
         <li class="nav-item">
@@ -39,15 +72,91 @@
             </a>
         </li>
     </ul>
+    <br>
+
     <div class="container">
         <div class="row mt-3">
             <div class="col-sm-12">
                 <h5 class="card-title">Astronomical Events Data</h5>
-                <div id="dataContainer" class="d-flex flex-row flex-wrap"></div>
+                <div class="image-container">
+                    <h6>Images:</h6>
+                    <img src="images/image3.jpg" alt="Image 1">
+                    <img src="images/image5.jpg" alt="Image 2">
+                    <img src="images/image6.jpg" alt="Image 3">
+                    <img src="images/image7.jpg" alt="Image 4">
+                    <img src="images/image8.jpg" alt="Image 5">
+                </div>
+                <br>
+                <div class="url-container">
+                    <h6>URLs:</h6>
+                    <ul>
+                        <li><a href="https://theskylive.com//planetarium?obj=sun&date=2023-06-25&h=00&m=00" target="_blank">Link to URL 1</a></li>
+                        <li><a href="urls/url_7.txt" target="_blank">Link to URL 2</a></li>
+                        <li><a href="urls/url_8.txt" target="_blank">Link to URL 3</a></li>
+                        <li><a href="urls/url_9.txt" target="_blank">Link to URL 4</a></li>
+                        <li><a href="urls/url_10.txt" target="_blank">Link to URL 5</a></li>
+                        <li><a href="urls/url_11.txt" target="_blank">Link to URL 6</a></li>
+                        <li><a href="urls/url_12.txt" target="_blank">Link to URL 7</a></li>
+                        <li><a href="urls/url_13.txt" target="_blank">Link to URL 8</a></li>
+                        <li><a href="urls/url_14.txt" target="_blank">Link to URL 9</a></li>
+                        <li><a href="urls/url_15.txt" target="_blank">Link to URL 10</a></li>
+                        <li><a href="urls/url_16.txt" target="_blank">Link to URL 11</a></li>
+                        <li><a href="urls/url_17.txt" target="_blank">Link to URL 12</a></li>
+                        <li><a href="urls/url_18.txt" target="_blank">Link to URL 13</a></li>
+                        <li><a href="urls/url_19.txt" target="_blank">Link to URL 14</a></li>
+                    </ul>
+                </div>
+                <br>
+                <div class="table-container">
+                    <h6>Table:</h6>
+                    <table id="sunTable">
+                        <tr>
+                            <th>Name</th>
+                            <th>Value</th>
+                        </tr>
+                    </table>
+                </div>
+                
             </div>
         </div>
     </div>
 
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0pQqJLuAwvWNSf/8MNifhifonN+g4jr6N5pe+g5fT0Bi2QE2y1Dk5CrPgi9"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+        <script>
+            // Fetch the JSON file and populate the table
+            fetch('tables/table_2.json')
+                .then(response => response.json())
+                .then(data => {
+                    const table = document.getElementById('sunTable');
+                    for (const [key, value] of Object.entries(data)) {
+                        //if the value or the key is empty dont add it to the table
+                        if (value == "" || key == "") {
+                            continue;
+                        }
+                    const row = table.insertRow();
+                    const cell1 = row.insertCell();
+                    const cell2 = row.insertCell();
+                    const firstWord = key.split(' ')[0];
+                    const restOfData = key.substring(firstWord.length).trim();
+                    cell1.textContent = firstWord;
+                    cell2.textContent = `${restOfData} ${value}`;
+
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        </script>
+        
 </body>
 
 </html>
