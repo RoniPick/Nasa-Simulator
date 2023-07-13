@@ -75,6 +75,21 @@
                             const valueSpan = document.createElement('span');
                             valueSpan.textContent = `${item[key]}`;
 
+                            if (key === 'estimated_diameter'){
+                                const diameter = item[key];
+                                valueSpan.textContent = `Min: ${diameter.kilometers.estimated_diameter_min}, Max: ${diameter.kilometers.estimated_diameter_max}`;
+                            }
+                            
+                            if(key === 'close_approach_data'){
+                                const data = item[key];
+                                valueSpan.textContent = `Date: ${data[0].close_approach_date_full}, Distance: ${data[0].miss_distance.kilometers}`;
+                            }
+
+                            if(key === 'links'){
+                                const links = item[key];
+                                valueSpan.textContent = `Self: ${links.self}, Next: ${links.next}`;
+                            }
+
                             row.appendChild(keySpan);
                             row.appendChild(valueSpan);
                             itemDiv.appendChild(row);
