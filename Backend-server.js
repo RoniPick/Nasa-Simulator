@@ -101,10 +101,24 @@ app.get('/data-informingFactors', (req, res) => {
       console.error("Error sending event to ElasticSearch:", error);
       return;
     }
+    console.log("insdie try");
     console.log("Get data from ElasticSearch");
-    res.end(stdout.toString());
+    const data = JSON.parse(stdout);
+      console.log("insdie try");
+      console.log("Retrieved data from Elasticsearch:", data);
+    //res.end(stdout.toString());
 
     //res.end("Response: " + stdout.toString(),40);
+    try {
+      const data = JSON.parse(stdout);
+      console.log("insdie try");
+      console.log("Retrieved data from Elasticsearch:", data);
+
+      res.json(data.hits.hits.map(hit => hit._source));
+    } catch (e) {
+      console.error("Error parsing data from Elasticsearch:", e);
+      res.status(500).send("Error parsing data from Elasticsearch");
+    }
   });
 });
 
@@ -114,31 +128,31 @@ app.get('/data-brightStar', (req, res) => {
   let { start_date, end_date, bright_star } = req.query
   const curlCommand = `curl -X GET ${elasticSearchEndpoint} -d '{
         "query": {
-            "bool": {
-              "must": [],
-              "filter": [
-                {
-                  "match_all": {}
-                },
-                {
-                  "match_phrase": {
-                    "Title": "${bright_star}"
-                  }
-                },
-                {
-                  "range": {
-                    "utc": {
-                      "gte": "${new Date(start_date).toISOString()}",
-                      "lte": "${new Date(end_date).toISOString()}",
-                      "format": "strict_date_optional_time"
-                    }
+          "bool": {
+            "must": [],
+            "filter": [
+              {
+                "match_all": {}
+              },
+              {
+                "match_phrase": {
+                  "Title": "${bright_star}"
+                }
+              },
+              {
+                "range": {
+                  "utc": {
+                    "gte": "${new Date(start_date).toISOString()}",
+                    "lte": "${new Date(end_date).toISOString()}",
+                    "format": "strict_date_optional_time"
                   }
                 }
-              ],
-              "should": [],
-              "must_not": []
-            }
+              }
+            ],
+            "should": [],
+            "must_not": []
           }
+        }
       }' -H "Content-Type: application/json" | jq '.hits.hits[]._source'`;
   exec(curlCommand, (error, stdout, stderr) => {
     if (error) {
@@ -146,8 +160,16 @@ app.get('/data-brightStar', (req, res) => {
       return;
     }
     console.log("Get data from ElasticSearch");
-    res.end(stdout.toString());
-
+    try {
+      //const data = JSON.parse(stdout);
+      console.log("insdie try");
+      console.log("Retrieved data from Elasticsearch:", stdout);
+      const dataArrary = [[stdout]];
+      res.json(dataArrary);
+    } catch (e) {
+      console.error("Error parsing data from Elasticsearch:", e);
+      res.status(500).send("Error parsing data from Elasticsearch");
+    }
     //res.end("Response: " + stdout.toString(),40);
   });
 });

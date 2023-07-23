@@ -17,7 +17,8 @@
 </head>
 
 <body>
-  <h1 class="text-center mt-3" style="color: whitesmoke; font-family: Monaco;">Welcome to the Astronomical Events Portal!</h1>
+  <h1 class="text-center mt-3" style="color: whitesmoke; font-family: Monaco;">Welcome to the Astronomical Events
+    Portal!</h1>
 
   <ul class="nav nav-pills nav-fill">
     <li class="nav-item">
@@ -46,7 +47,7 @@
     <div class="row mt-3">
       <div class="col-sm-12">
         <h5 class="card-title" style="color: whitesmoke; font-family: Monaco;">Astronomical Events Data</h5>
-        
+
         <!-- Query Section -->
         <div class="mb-3" style="color: whitesmoke; font-family: Monaco;">
           <h3>Message Search</h3>
@@ -72,7 +73,10 @@
         <!-- End of Query Section -->
 
         <!-- Cards Section -->
-        <div id="dataContainer" class="d-flex flex-row flex-wrap" style="font-family: Monaco;"></div>
+        <div id="dataContainer" class="d-flex flex-row flex-wrap" style="font-family: Monaco;">
+         
+        </div>
+        <div id="searchResultsContainer"></div>
         <!-- End of Cards Section -->
       </div>
     </div>
@@ -95,7 +99,7 @@
               itemDiv.classList.add('bg-success');
             }
 
-           
+
             const keys = Object.keys(item);
 
             keys.forEach(key => {
@@ -104,10 +108,10 @@
 
               const keySpan = document.createElement('strong');
               keySpan.textContent = `${key}:`;
-              
+
               const valueSpan = document.createElement('span');
               valueSpan.textContent = `${item[key]}`;
-              
+
               // show the event location as RA and DEC
               if (key === 'location') {
                 const location = item[key];
@@ -130,10 +134,51 @@
 
     // Call getData() function when the page loads
     window.addEventListener('DOMContentLoaded', getData);
+    function displaySearchResults(searchResults) {
+      console.log("result" + searchResults);
+      console.log("inside function");
+      const searchResultsContainer = document.getElementById('searchResultsContainer');
+      searchResultsContainer.innerHTML = ''; // Clear previous search results
+      searchResults.forEach(item => {
+        const itemDiv = document.createElement('div');
+        itemDiv.classList.add('card', 'mb-3', 'mr-3');
+        itemDiv.style.width = '18rem';
+        // Add styling based on severityLevel
+        if (item['severityLevel'] >= 4) {
+          itemDiv.classList.add('bg-danger');
+          itemDiv.classList.add('zoom-effect');
+        } else {
+          itemDiv.classList.add('bg-success');
+        }
+
+        const keys = Object.keys(item);
+        keys.forEach(key => {
+          const row = document.createElement('p');
+          row.classList.add('mb-0');
+          const keySpan = document.createElement('strong');
+          keySpan.textContent = `${key}:`;
+
+          const valueSpan = document.createElement('span');
+          valueSpan.textContent = `${item[key]}`;
+
+          // show the event location as RA and DEC
+          if (key === 'location') {
+            const location = item[key];
+            valueSpan.textContent = `RA: ${location.RA}, DEC: ${location.DEC}`;
+          }
+
+          row.appendChild(keySpan);
+          row.appendChild(valueSpan);
+          itemDiv.appendChild(row);
+        });
+
+        searchResultsContainer.appendChild(itemDiv);
+      });
+    }
 
     // Form submission event listener
     const searchForm = document.getElementById('searchForm');
-    searchForm.addEventListener('submit', function(event) {
+    searchForm.addEventListener('submit', function (event) {
       event.preventDefault();
       if (searchForm.checkValidity()) {
         const starInput = document.getElementById('starInput').value;
@@ -144,11 +189,15 @@
         // Replace the URL below with your actual backend server URL
         const url = `http://localhost:3000/data-brightStar?bright_star=${starInput}&start_date=${startDateInput}&end_date=${endDateInput}`;
         fetch(url)
-          .then(response => response.json())
-          .then(searchResults => {
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => {
             // Process and display the search results
-            const searchResultsContainer = document.getElementById('searchResults');
-            // ...
+            displaySearchResults(data); // Call the function to display search results
           })
           .catch(error => {
             console.error('Error:', error);
