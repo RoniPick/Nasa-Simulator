@@ -54,8 +54,15 @@
           <form id="searchForm" class="needs-validation" novalidate>
             <div class="form-group">
               <label for="starInput">Bright Star:</label>
-              <input type="text" class="form-control" id="starInput" required>
+              <input type="text" class="form-control" id="starInput">
               <div class="invalid-feedback">Please enter a bright star.</div>
+            </div>
+            <div class="form-group">
+              <label for="informingFactorInput">Informing Factor:</label>
+              <select class="form-control" id="informingFactorInput">
+                <option value="">Choose an informing factor</option>
+                <!-- Populate the dropdown with options from informingFactors array -->
+              </select>
             </div>
             <div class="form-group">
               <label for="startDateInput">Start Date:</label>
@@ -74,7 +81,7 @@
 
         <!-- Cards Section -->
         <div id="dataContainer" class="d-flex flex-row flex-wrap" style="font-family: Monaco;">
-         
+
         </div>
         <div id="searchResultsContainer"></div>
         <!-- End of Cards Section -->
@@ -83,6 +90,18 @@
   </div>
 
   <script>
+    const informingFactors = ['MMT', 'Gemini Observatory Telescopes', 'Very Large Telescope', 'Subaru Telescope', 'Large Binocular Telescope', 'Southern African Large Telescope',
+      'Keck 1 and 2', 'Hobby-Eberly Telescope', 'Gran Telescopio Canarias', 'The Giant Magellan Telescope', 'Thirty Meter Telescope', 'European Extremely Large Telescope'
+    ];
+
+    // Populate the dropdown with options from informingFactors array
+    const informingFactorInput = document.getElementById('informingFactorInput');
+    informingFactors.forEach(factor => {
+      const option = document.createElement('option');
+      option.value = factor;
+      option.textContent = factor;
+      informingFactorInput.appendChild(option);
+    });
     function getData() {
       fetch('http://localhost:3000/data-5events')
         .then(response => response.json())
@@ -139,6 +158,11 @@
       console.log("inside function");
       const searchResultsContainer = document.getElementById('searchResultsContainer');
       searchResultsContainer.innerHTML = ''; // Clear previous search results
+      if (searchResults.length === 0) {
+        // Show a pop-up message if there are no search results
+        alert('No bright-star with this name');
+        return;
+      }
       searchResults.forEach(item => {
         const itemDiv = document.createElement('div');
         itemDiv.classList.add('card', 'mb-3', 'mr-3');
@@ -184,10 +208,27 @@
         const starInput = document.getElementById('starInput').value;
         const startDateInput = document.getElementById('startDateInput').value;
         const endDateInput = document.getElementById('endDateInput').value;
+        const informingFactorInput = document.getElementById('informingFactorInput').value;
 
-        // Make HTTP request to backend server with the search parameters
-        // Replace the URL below with your actual backend server URL
-        const url = `http://localhost:3000/data-brightStar?bright_star=${starInput}&start_date=${startDateInput}&end_date=${endDateInput}`;
+        if (starInput && informingFactorInput) {
+          alert('Please fill either "Bright Star" or "Informing Factor", not both.');
+
+          // Reset the input fields
+          document.getElementById('starInput').value = '';
+          document.getElementById('informingFactorInput').value = '';
+
+          return;
+        }
+        let url = "";
+
+        if (!informingFactorInput && !starInput) {
+          url = `http://localhost:3000/data-times?start_date=${startDateInput}&end_date=${endDateInput}`;
+        } else if (!informingFactorInput) {
+          url = `http://localhost:3000/data-brightStar?bright_star=${starInput}&start_date=${startDateInput}&end_date=${endDateInput}`;
+        } else if (!starInput) {
+          url = `http://localhost:3000/data-informingFactors?start_date=${startDateInput}&end_date=${endDateInput}&informingFactor=${informingFactorInput}`;
+        }
+
         fetch(url)
           .then(response => {
             if (!response.ok) {
