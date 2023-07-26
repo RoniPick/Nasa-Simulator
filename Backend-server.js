@@ -49,7 +49,7 @@ app.get('/data-5events', (req, res) => {
       console.error("Error sending event to Elasticsearch:", error);
       return res.status(500).send("Error retrieving data from Elasticsearch");
     }
-  
+
     try {
       const data = JSON.parse(stdout);
       console.log("Retrieved data from Elasticsearch:", data);
@@ -95,30 +95,26 @@ app.get('/data-informingFactors', (req, res) => {
               "must_not": []
             }
           }
-      }' -H "Content-Type: application/json" | jq '.hits.hits[]._source'`;
+      }' -H "Content-Type: application/json"`;
   exec(curlCommand, (error, stdout, stderr) => {
     if (error) {
       console.error("Error sending event to ElasticSearch:", error);
       return;
     }
-    console.log("insdie try");
     console.log("Get data from ElasticSearch");
-    const data = JSON.parse(stdout);
-      console.log("insdie try");
-      console.log("Retrieved data from Elasticsearch:", data);
-    //res.end(stdout.toString());
-
-    //res.end("Response: " + stdout.toString(),40);
     try {
       const data = JSON.parse(stdout);
       console.log("insdie try");
-      console.log("Retrieved data from Elasticsearch:", data);
-
+      console.log("Retrieved data from Elasticsearch:", stdout);
+      // const dataArrary = [[stdout]];
+      // res.json(dataArrary);
       res.json(data.hits.hits.map(hit => hit._source));
     } catch (e) {
       console.error("Error parsing data from Elasticsearch:", e);
       res.status(500).send("Error parsing data from Elasticsearch");
     }
+
+
   });
 });
 
@@ -153,7 +149,7 @@ app.get('/data-brightStar', (req, res) => {
             "must_not": []
           }
         }
-      }' -H "Content-Type: application/json" | jq '.hits.hits[]._source'`;
+      }' -H "Content-Type: application/json"`;
   exec(curlCommand, (error, stdout, stderr) => {
     if (error) {
       console.error("Error sending event to ElasticSearch:", error);
@@ -161,17 +157,19 @@ app.get('/data-brightStar', (req, res) => {
     }
     console.log("Get data from ElasticSearch");
     try {
-      //const data = JSON.parse(stdout);
+      const data = JSON.parse(stdout);
       console.log("insdie try");
       console.log("Retrieved data from Elasticsearch:", stdout);
-      const dataArrary = [[stdout]];
-      res.json(dataArrary);
+      // const dataArrary = [[stdout]];
+      // res.json(dataArrary);
+      res.json(data.hits.hits.map(hit => hit._source));
     } catch (e) {
       console.error("Error parsing data from Elasticsearch:", e);
       res.status(500).send("Error parsing data from Elasticsearch");
     }
     //res.end("Response: " + stdout.toString(),40);
   });
+
 });
 //Get events by date range
 //http://localhost:3000/data-times?start_date=6/27/23&end_date=6/28/23
@@ -205,16 +203,26 @@ app.get('/data-times', (req, res) => {
               "must_not": []
             }
           }
-      }' -H "Content-Type: application/json" | jq '.hits.hits[]._source'`;
+      }' -H "Content-Type: application/json"`;
   exec(curlCommand, (error, stdout, stderr) => {
     if (error) {
       console.error("Error sending event to ElasticSearch:", error);
       return;
     }
     console.log("Get data from ElasticSearch");
-    res.end(stdout.toString());
+    try {
+      const data = JSON.parse(stdout);
+      console.log("insdie try");
+      console.log("Retrieved data from Elasticsearch:", stdout);
+      // const dataArrary = [[stdout]];
+      // res.json(dataArrary);
+      res.json(data.hits.hits.map(hit => hit._source));
+    } catch (e) {
+      console.error("Error parsing data from Elasticsearch:", e);
+      res.status(500).send("Error parsing data from Elasticsearch");
+    }
 
-    //res.end("Response: " + stdout.toString(),40);
+
   });
 });
 
