@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <script src="dataFetcher.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
@@ -17,27 +17,36 @@
     <title>Nasa Simulator!</title>
     <style>
         .container-smaller {
-            max-width: 800px; /* Set the maximum width of the container */
-            margin: 0 auto; /* Center the container horizontally */
-            position: fixed; /* Position the container */
-            bottom: 20px; /* Distance from the bottom of the page */
-            right: 20px; /* Distance from the right side of the page */
-            background-color: rgba(0, 0, 0, 0.8); /* Optional background color */
-            padding: 10px; /* Optional padding */
-            border-radius: 10px; /* Optional border-radius for rounded corners */
-            color: white; /* Optional text color */
+            max-width: 800px;
+            /* Set the maximum width of the container */
+            margin: 0 auto;
+            /* Center the container horizontally */
+            position: fixed;
+            /* Position the container */
+            bottom: 20px;
+            /* Distance from the bottom of the page */
+            right: 20px;
+            /* Distance from the right side of the page */
+            background-color: rgba(0, 0, 0, 0.8);
+            /* Optional background color */
+            padding: 10px;
+            /* Optional padding */
+            border-radius: 10px;
+            /* Optional border-radius for rounded corners */
+            color: white;
+            /* Optional text color */
         }
-        
+
         /* Style for the smaller table */
         #dataContainer {
             font-size: 12px;
         }
-        
+
         /* Style for the parent container */
         .parent-container {
             position: relative;
         }
-        
+
         /* Style for the title above the table */
         .table-title {
             font-size: 18px;
@@ -53,13 +62,14 @@
 
     <ul class="nav nav-pills nav-fill">
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard.html" data-toggle="pill" style="color: azure;">
+            <a class="nav-link active" aria-current="page" href="dashboard.html" data-toggle="pill"
+                style="color: azure;">
                 <i class="fas fa-chart-bar" style="color: azure;"></i> Dashboard
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="Astronomical_events.html" style="color: azure;">
-                <i class="fas fa-moon" style="color: azure;"></i> Astronomical events 
+                <i class="fas fa-moon" style="color: azure;"></i> Astronomical events
             </a>
         </li>
         <li class="nav-item">
@@ -71,12 +81,13 @@
             <a class="nav-link" href="sun.html" style="color: azure;">
                 <i class="fas fa-sun" style="color: azure;"></i> Sun
             </a>
-        </li>     
+        </li>
     </ul>
     <div class="container">
         <div class="row mt-3">
             <div class="col-sm-6">
-                <h5 class="card-title" style="color: azure; font-family:Georgia, 'Times New Roman', Times, serif;">Last Astronomical Events Data</h5>
+                <h5 class="card-title" style="color: azure; font-family:Georgia, 'Times New Roman', Times, serif;">Last
+                    Astronomical Events Data</h5>
                 <table id="dataContainerTable1" class="table table-bordered table-sm"
                     style="font-family: sans-serif; color: white; background-color: rgba(0, 0, 0, 0.3);">
                     <thead>
@@ -93,7 +104,8 @@
                 </table>
             </div>
             <div class="col-sm-6">
-                <h5 class="card-title" style="color: azure; font-family:Georgia, 'Times New Roman', Times, serif;">Future Astronomical Events Data</h5>
+                <h5 class="card-title" style="color: azure; font-family:Georgia, 'Times New Roman', Times, serif;">
+                    Future Astronomical Events Data</h5>
                 <table id="dataContainerTable2" class="table table-bordered table-sm"
                     style=" font-family: sans-serif; color: white; background-color: rgba(0, 0, 0, 0.3);">
                     <thead>
@@ -110,23 +122,26 @@
                 </table>
             </div>
         </div>
+        <canvas id="severityChart" width="400" height="200"></canvas>
+        <div id="dataContainer" class="d-flex flex-row flex-wrap" style="font-family: Monaco;"></div>
     </div>
-    
+
+
     <script>
         // Call getData() function 
         window.addEventListener('DOMContentLoaded', () => {
             const url = 'http://localhost:3000/data-5events'; // Modify the URL accordingly
             const targetContainerId = 'dataContainerTable1'; // Modify the container ID accordingly
             fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                populateTableData(data, targetContainerId);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+                .then(response => response.json())
+                .then(data => {
+                    populateTableData(data, targetContainerId);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         });
-        
+
         window.addEventListener('DOMContentLoaded', () => {
             fetch('http://localhost:4001/nasa')
                 .then(response => response.json())
@@ -161,11 +176,11 @@
                             const valueSpan = document.createElement('span');
                             valueSpan.style.fontSize = 'x-scale';
 
-                            if (key === 'estimated_diameter'){
+                            if (key === 'estimated_diameter') {
                                 const diameter = item[key];
                                 valueSpan.textContent = `Min: ${diameter.kilometers.estimated_diameter_min}, Max: ${diameter.kilometers.estimated_diameter_max}`;
                             }
-                            else if(key === 'close_approach_data'){
+                            else if (key === 'close_approach_data') {
                                 const data = item[key];
                                 valueSpan.textContent = `Date: ${data[0].close_approach_date_full}, Distance: ${data[0].miss_distance.kilometers}`;
                             }
@@ -184,6 +199,85 @@
                     console.error('Error:', error);
                 });
         });
+
+        const startDateInput = "6/26/23";
+        const endDateInput = "7/27/23";
+        // Chart configuration
+        const chartConfig = {
+            type: 'bar',
+            data: {
+                labels: ['1', '2', '3', '4', '5'], // Severity levels
+                datasets: [{
+                    label: 'Number of Events',
+                    data: [0, 0, 0, 0, 0], // Number of events
+                    backgroundColor: 'rgba(255, 255, 255, 0.7)', // Change the background color to white with transparency
+                    borderColor: 'rgba(255, 255, 255, 1)', // Change the border color to white
+                    borderWidth: 1,
+                }],
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Events',
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.2)', // Change grid color to white with transparency
+                        },
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Severity Level',
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.2)', // Change grid color to white with transparency
+                        },
+                    },
+                },
+            },
+        };
+
+        // Function to process and update chart data
+        function updateSeverityChart(data) {
+            const severityLevels = [1, 2, 3, 4, 5];
+            const eventsCountBySeverity = Array(5).fill(0);
+
+            data.forEach((item) => {
+                const severity = item.severityLevel;
+                eventsCountBySeverity[severity - 1]++;
+            });
+
+            chartConfig.data.datasets[0].data = eventsCountBySeverity;
+
+            // Get the canvas element and draw the chart
+            const ctx = document.getElementById('severityChart').getContext('2d');
+            new Chart(ctx, chartConfig);
+        }
+
+        // Call getData() function when the page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            fetch(`http://localhost:3000/data-times?start_date=${startDateInput}&end_date=${endDateInput}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    const dataContainer = document.getElementById('dataContainer');
+                    // ... Existing code to display dataContainer
+
+                    // Update the chart with the retrieved data
+                    updateSeverityChart(data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        });
+
+
+
+
+
     </script>
 </body>
+
 </html>
