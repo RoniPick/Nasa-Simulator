@@ -64,3 +64,12 @@ body {
     }
   }
   
+
+/* Style for the table cells in both tables */
+#dataContainerTable1 td,
+#dataContainerTable1 th,
+#dataContainerTable2 td,
+#dataContainerTable2 th {
+  font-size: 14px; /* Adjust the font size to make it smaller */
+  padding: 4px; /* Adjust the padding to reduce cell spacing */
+}
