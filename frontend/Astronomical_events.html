@@ -151,9 +151,15 @@
         });
     }
 
+    function clearDataContainer() {
+      const dataContainer = document.getElementById('dataContainer');
+      dataContainer.innerHTML = '';
+    }
+
     // Call getData() function when the page loads
     window.addEventListener('DOMContentLoaded', getData);
     function displaySearchResults(searchResults) {
+      clearDataContainer();
       console.log("result" + searchResults);
       console.log("inside function");
       const searchResultsContainer = document.getElementById('searchResultsContainer');
