@@ -164,7 +164,7 @@
 
 
     <script>
-      function processDataForGraph(data) {
+        function processDataForGraph(data) {
             // Extract distances from all the dates
             const allDistances = [];
             for (const date in data.near_earth_objects) {
@@ -177,95 +177,95 @@
         }
 
 
-    // New function to create distance distribution graph
-    function createDistanceDistributionGraph(data) {
-      const distances = processDataForGraph(data);
-      const ctx = document.getElementById('distanceChart').getContext('2d');
+        // New function to create distance distribution graph
+        function createDistanceDistributionGraph(data) {
+            const distances = processDataForGraph(data);
+            const ctx = document.getElementById('distanceChart').getContext('2d');
 
-      const distanceChartConfig = {
-        type: 'bar',
-        data: {
-          labels: distances,
-          datasets: [{
-            label: 'Number of Events',
-            data: Array.from({ length: distances.length }, () => 1), // Assuming each distance occurs once
-            backgroundColor: 'rgba(255, 192, 203, 0.7)',
-            borderColor: 'rgba(255, 192, 203, 0.7)',
-            borderWidth: 1,
-          }],
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
-              title: {
-                display: true,
-                text: 'Number of Events',
-                color: 'white',
-                font: {
-                  weight: 'bold',
+            const distanceChartConfig = {
+                type: 'bar',
+                data: {
+                    labels: distances,
+                    datasets: [{
+                        label: 'Number of Events',
+                        data: Array.from({ length: distances.length }, () => 1), // Assuming each distance occurs once
+                        backgroundColor: 'rgba(255, 192, 203, 0.7)',
+                        borderColor: 'rgba(255, 192, 203, 0.7)',
+                        borderWidth: 1,
+                    }],
                 },
-              },
-              grid: {
-                color: 'white',
-                backgroundColor: 'white',
-                borderWidth: 1,
-                drawBorder: false,
-              },
-              ticks: {
-                color: 'white',
-              },
-            },
-            x: {
-              title: {
-                display: true,
-                text: 'Distance (kilometers)',
-                color: 'white',
-                font: {
-                  weight: 'bold',
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Events',
+                                color: 'white',
+                                font: {
+                                    weight: 'bold',
+                                },
+                            },
+                            grid: {
+                                color: 'white',
+                                backgroundColor: 'white',
+                                borderWidth: 1,
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                color: 'white',
+                            },
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Distance (kilometers)',
+                                color: 'white',
+                                font: {
+                                    weight: 'bold',
+                                },
+                            },
+                            grid: {
+                                color: 'white',
+                                backgroundColor: 'white',
+                                borderWidth: 1,
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                color: 'white',
+                            },
+                        },
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'white',
+                                font: {
+                                    weight: 'bold',
+                                },
+                            },
+                        },
+                    },
                 },
-              },
-              grid: {
-                color: 'white',
-                backgroundColor: 'white',
-                borderWidth: 1,
-                drawBorder: false,
-              },
-              ticks: {
-                color: 'white',
-              },
-            },
-          },
-          plugins: {
-            legend: {
-              labels: {
-                color: 'white',
-                font: {
-                  weight: 'bold',
-                },
-              },
-            },
-          },
-        },
-      };
+            };
 
-      new Chart(ctx, distanceChartConfig);
-    }
+            new Chart(ctx, distanceChartConfig);
+        }
 
-    // Call createDistanceDistributionGraph() function when the page loads
-    window.addEventListener('DOMContentLoaded', () => {
-      fetch('http://localhost:4001/nasa')
-        .then(response => response.json())
-        .then(data => {
-          // Existing code to display the last five events in the table
+        // Call createDistanceDistributionGraph() function when the page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            fetch('http://localhost:4001/nasa')
+                .then(response => response.json())
+                .then(data => {
+                    // Existing code to display the last five events in the table
 
-          // Create the distance distribution graph
-          createDistanceDistributionGraph(data);
-        })
-        .catch(error => {
-          console.error('Error:', error);
+                    // Create the distance distribution graph
+                    createDistanceDistributionGraph(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         });
-    });
         // Call getData() function 
         window.addEventListener('DOMContentLoaded', () => {
             const url = 'http://localhost:3000/data-5events'; // Modify the URL accordingly
