@@ -69,6 +69,7 @@ app.get('/data-informingFactors', (req, res) => {
   const elasticSearchEndpoint = 'https://r1x0rdsre0:anu5034q9c@events-data-1012553474.us-east-1.bonsaisearch.net:443/nasa*/_search';
   let { start_date, end_date, informingFactor } = req.query
   const curlCommand = `curl -X GET ${elasticSearchEndpoint} -d '{
+        "size": 100,
         "query": {
             "bool": {
               "must": [],
@@ -126,6 +127,7 @@ app.get('/data-brightStar', (req, res) => {
     console.log("end_date", end_date);
     console.log("bright_star", bright_star);
   const curlCommand = `curl -X GET ${elasticSearchEndpoint} -d '{
+        "size": 100,
         "query": {
           "bool": {
             "must": [],
@@ -180,6 +182,7 @@ app.get('/data-times', (req, res) => {
   const elasticSearchEndpoint = 'https://r1x0rdsre0:anu5034q9c@events-data-1012553474.us-east-1.bonsaisearch.net:443/nasa*/_search';
   let { start_date, end_date } = req.query
   const curlCommand = `curl -X GET ${elasticSearchEndpoint} -d '{
+        "size": 100,
         "query": {
             "bool": {
               "must": [],
