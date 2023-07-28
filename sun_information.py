@@ -1,6 +1,6 @@
 import os
 import requests
-# from PIL import Image
+from PIL import Image
 from io import BytesIO
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -8,23 +8,13 @@ from selenium.webdriver.common.by import By
 import base64
 import json
 from selenium.webdriver.chrome.service import Service
-
-"""This class purpose is to scrape data from the website https://theskylive.com/sun-info
-and save the data in the following formats:
-1. Images - all images with size above 20KB
-2. Tables - all tables in the page
-3. URLs - URLs in the page which in the following table lists the ephemerides
- of The Sun computed for the past and next 7 days, with a 24 hours interval.
-Click on each row of the table to locate The Sun in our Online Planetarium 
-at the chosen date. """
-
+from webdriver_manager.chrome import ChromeDriverManager  # Import the new module
 
 # Set up Chrome WebDriver
-chrome_driver_path = '/mnt/c/Users/97254/Desktop/Nasa-Simulator/chromedriver.exe'
-
 options = webdriver.ChromeOptions()
 options.add_argument('--headless')  # Run Chrome in headless mode (without GUI)
-driver = webdriver.Chrome(service=Service(chrome_driver_path), options=options)
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)  # Use webdriver_manager
+
 
 # Open the website
 driver.get('https://theskylive.com/sun-info')
@@ -113,8 +103,3 @@ for index, element in enumerate(elements):
 
 driver.quit()
 print("Data scraping and saving completed.")
-
-
-
-
-

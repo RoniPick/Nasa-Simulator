@@ -135,7 +135,8 @@
 
         <script>
             // Fetch the JSON file and populate the table
-            fetch('tables/table_2.json')
+            window.addEventListener('DOMContentLoaded', () => {
+            fetch('http://localhost:4001/sun')
                 .then(response => response.json())
                 .then(data => {
                     const table = document.getElementById('sunTable');
@@ -155,6 +156,7 @@
                     }
                 })
                 .catch(error => console.error('Error:', error));
+            });
         </script>
         
 </body>

@@ -12,6 +12,7 @@
     "@azure/event-hubs": "^5.10.0",
     "@elastic/elasticsearch": "^8.8.0",
     "axios": "^1.4.0",
+    "cheerio": "^1.0.0-rc.12",
     "epxress": "^0.0.1-security",
     "esm": "^3.2.25",
     "express": "^4.18.2",

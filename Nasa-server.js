@@ -1,5 +1,8 @@
 const express = require('express');
 const axios = require('axios');
+const cheerio = require('cheerio');
+const { exec } = require('child_process');
+const fs = require('fs');
 const app = express();
 const port = 4001;
 const path = require('path');
@@ -20,29 +23,49 @@ app.get('/', (req, res) => {
 });
 
 // Define a route for NASA
-app.get('/nasa', async (req, res) => {
-  try {
-    const currentDate = new Date();
-    const nextDate = new Date();
-    nextDate.setDate(currentDate.getDate() + 1);
+// app.get('/nasa', async (req, res) => {
+//   try {
+//     const currentDate = new Date();
+//     const nextDate = new Date();
+//     nextDate.setDate(currentDate.getDate() + 1);
 
-    const startDate = formatDate(currentDate);
-    const endDate = formatDate(nextDate);
+//     const startDate = formatDate(currentDate);
+//     const endDate = formatDate(nextDate);
 
-    const apiKey = '1uI4GbaJZKD9NooOyvHAc5RK54xdc6ifIKXCe8g9';
-    const url = `https://api.nasa.gov/neo/rest/v1/feed?start_date=${startDate}&end_date=${endDate}&api_key=${apiKey}`;
+//     const apiKey = '1uI4GbaJZKD9NooOyvHAc5RK54xdc6ifIKXCe8g9';
+//     const url = `https://api.nasa.gov/neo/rest/v1/feed?start_date=${startDate}&end_date=${endDate}&api_key=${apiKey}`;
 
-    const response = await axios.get(url);
-    const data = response.data;
-    console.log("data", data)
+//     const response = await axios.get(url);
+//     const data = response.data;
+//     console.log("data", data)
 
-    res.json(data);
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-  console.log("finished")
+//     res.json(data);
+//   } catch (error) {
+//     console.error('Error:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+//   console.log("finished")
 
+// });
+
+// Define a route for scraping data from the main website
+app.get('/sun', (req, res) => {
+  console.log("sun")
+  const pythonProcess = exec('python3 sun_information.py');
+
+  pythonProcess.stdout.on('data', (data) => {
+    console.log(`Python stdout: ${data}`);
+  });
+
+  pythonProcess.stderr.on('data', (data) => {
+    console.error(`Python stderr: ${data}`);
+  });
+
+  pythonProcess.on('close', (code) => {
+    console.log(`Python process exited with code ${code}`);
+    // Send a response to the client here if needed
+    res.json({ message: 'Python script executed successfully' });
+  });
 });
 
 // Format the date in 'YYYY-MM-DD' format
