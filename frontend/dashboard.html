@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <script src="dataFetcher.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- <script src="path/to/chart-js.js"></script> -->
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
@@ -39,7 +40,7 @@
 
         /* Style for the smaller table */
         #dataContainer {
-            font-size: 12px;
+            font-size: 14px;
         }
 
         /* Style for the parent container */
@@ -86,7 +87,7 @@
     <div class="container">
         <div class="row mt-3">
             <div class="col-sm-6">
-                <h5 class="card-title" style="color: azure; font-family:Georgia, 'Times New Roman', Times, serif;">Last
+                <h5 class="card-title" style="color: azure;  font-family: 'Trebuchet MS', sans-serif;">Last
                     Astronomical Events Data</h5>
                 <table id="dataContainerTable1" class="table table-bordered table-sm"
                     style="font-family: sans-serif; color: white; background-color: rgba(0, 0, 0, 0.3);">
@@ -104,7 +105,7 @@
                 </table>
             </div>
             <div class="col-sm-6">
-                <h5 class="card-title" style="color: azure; font-family:Georgia, 'Times New Roman', Times, serif;">
+                <h5 class="card-title" style="color: azure;  font-family: 'Trebuchet MS', sans-serif;">
                     Future Astronomical Events Data</h5>
                 <table id="dataContainerTable2" class="table table-bordered table-sm"
                     style=" font-family: sans-serif; color: white; background-color: rgba(0, 0, 0, 0.3);">
@@ -121,8 +122,33 @@
                     <tbody></tbody>
                 </table>
             </div>
+                 <!-- Analytics title above the charts -->
+    <div class="row mt-3">
+        <div class="col-sm-12">
+            <h5 class="card-title text-center" style="color: rgba(255, 192, 203, 0.7); background-color: rgb(0, 0, 0, 0.3);  
+                        font-family: 'Trebuchet MS', sans-serif; font-size: 38px;">Analytics</h5>
         </div>
-        <canvas id="severityChart" width="400" height="200"></canvas>
+        <!-- Charts row -->
+    <div class="row mt-3">
+        <!-- Chart containers with some space between them -->
+        <div class="col-md-6 mb-4">
+            <div class="chart-container">
+                <canvas id="severityChart" width="500" height="300" style="background-color: rgb(0, 0, 0, 0.3);"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="chart-container">
+                <canvas id="eventTypeChart" width="500" height="330" style="background-color: rgb(0, 0, 0, 0.3);"></canvas>
+            </div>
+        </div>
+    </div>
+    </div>
+        </div>
+        
+        <!-- <canvas id="closeApproachChart" width="400" height="200"></canvas>
+        <canvas id="sunXChart" width="400" height="200"></canvas> -->
+          
+
         <div id="dataContainer" class="d-flex flex-row flex-wrap" style="font-family: Monaco;"></div>
     </div>
 
@@ -200,19 +226,102 @@
                 });
         });
 
-        const startDateInput = "5/20/23";
-        const endDateInput = "6/28/23";
-        // Chart configuration
-        const chartConfig = {
+        const startDateInput = "2023/07/06";
+        const endDateInput = "2023/07/28";
+
+        const severityChartCofig={
+                type: 'bar',
+                data: {
+                    id: 'severityChart',
+                    labels: ['1', '2', '3', '4', '5'], // Severity levels
+                    datasets: [{
+                        label: 'Number of Events',
+                        data: [0, 0, 0, 0, 0], // Number of events
+                        backgroundColor: 'rgba(255, 192, 203, 0.7)', // Change the background color to white with transparency
+                        borderColor: 'rgba(255, 192, 203, 0.7)', // Change the border color to white
+                        borderWidth: 1,
+                        color: 'white',
+                    }],
+                },
+                options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Events',
+                            color:'white',
+                            font: {
+                                weight: 'bold',
+                            }
+                        },
+                        grid: {
+                            // light pink color
+                            color: 'white',
+                            backgroundColor: 'white',
+                            borderWidth: 1,
+                            drawBorder: false,
+                        },
+                        ticks: {
+                            color: 'white',
+                        },
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Severity Level',
+                            color:'white',
+                            font: {
+                                weight: 'bold',
+                            }
+                            
+                        },
+                        grid: {
+                            color: 'white',
+                            backgroundColor: 'white',
+                            borderWidth: 1,
+                            drawBorder: false,
+                        },
+                        ticks: {
+                            color: 'white',
+                        },
+                    },
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'white',
+                            font: {
+                                weight: 'bold',
+                            }
+                        }
+                    }
+                }
+            },
+
+
+            }
+
+        // // const closeApproachChartConfig = {
+        // // }
+
+        // // const sunXChartConfig = {
+        // // }
+
+        const eventTypeChartConfig = {
             type: 'bar',
             data: {
-                labels: ['1', '2', '3', '4', '5'], // Severity levels
+                id: 'eventTypeChart',
+                labels: ['MMT', 'Gemini Observatory Telescopes', 'Very Large Telescope', 'Subaru Telescope', 'Large Binocular Telescope', 'Southern African Large Telescope',
+                'Keck 1 and 2', 'Hobby-Eberly Telescope', 'Gran Telescopio Canarias', 'The Giant Magellan Telescope', 'Thirty Meter Telescope', 'European Extremely Large Telescope'], // Event types
                 datasets: [{
                     label: 'Number of Events',
-                    data: [0, 0, 0, 0, 0], // Number of events
-                    backgroundColor: 'rgba(255, 255, 255, 0.7)', // Change the background color to white with transparency
-                    borderColor: 'rgba(255, 255, 255, 1)', // Change the border color to white
+                    fontColor: 'white',
+                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Number of events
+                    backgroundColor: 'rgba(255, 192, 203, 0.7)', // Change the background color to white with transparency
+                    borderColor: 'rgba(255, 192, 203, 0.7)', // Change the border color to white
                     borderWidth: 1,
+                    color: 'white',
                 }],
             },
             options: {
@@ -222,51 +331,104 @@
                         title: {
                             display: true,
                             text: 'Number of Events',
+                            color:'white',
+                            font: {
+                                weight: 'bold',
+                            }
                         },
                         grid: {
-                            color: 'rgba(255, 255, 255, 0.2)', // Change grid color to white with transparency
+                            // light pink color
+                            color: 'white',
+                            backgroundColor: 'white',
+                            borderWidth: 1,
+                            drawBorder: false,
+                        },
+                        ticks: {
+                            color: 'white',
                         },
                     },
                     x: {
                         title: {
                             display: true,
-                            text: 'Severity Level',
+                            // text: 'Severity Level',
+                            color:'white',
+                            font: {
+                                weight: 'bold',
+                            }
+                            
                         },
                         grid: {
-                            color: 'rgba(255, 255, 255, 0.2)', // Change grid color to white with transparency
+                            color: 'white',
+                            backgroundColor: 'white',
+                            borderWidth: 1,
+                            drawBorder: false,
+                        },
+                        ticks: {
+                            color: 'white',
                         },
                     },
                 },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'white',
+                            font: {
+                                weight: 'bold',
+                            }
+                        }
+                    }
+                }
             },
         };
 
-        // Function to process and update chart data
-        function updateSeverityChart(data) {
-            const severityLevels = [1, 2, 3, 4, 5];
-            const eventsCountBySeverity = Array(5).fill(0);
+        function updateCharts(data) {
+        const severityLevels = [1, 2, 3, 4, 5];
+        const eventsCountBySeverity = Array(5).fill(0);
 
-            data.forEach((item) => {
-                const severity = item.severityLevel;
-                eventsCountBySeverity[severity - 1]++;
-            });
+        const eventTypeLabels = [
+        'GRB', 'Apparent Brightness Rise', 'UV Rise', 'X-Ray Rise', 'Comet'
+        ];
+        const eventsCountByEventType = Array(12).fill(0);
 
-            chartConfig.data.datasets[0].data = eventsCountBySeverity;
+        data.forEach((item) => {
+            const severity = item.severityLevel;
+            eventsCountBySeverity[severity - 1]++;
 
-            // Get the canvas element and draw the chart
-            const ctx = document.getElementById('severityChart').getContext('2d');
-            new Chart(ctx, chartConfig);
-        }
+            const eventTypeIndex = eventTypeLabels.indexOf(item.eventType);
+            console.log(item.eventType);
+            if (eventTypeIndex !== -1) {
+                eventsCountByEventType[eventTypeIndex]++;
+            }
+        });
+
+
+
+        severityChartCofig.data.labels = severityLevels;
+        severityChartCofig.data.datasets[0].data = eventsCountBySeverity;
+
+        eventTypeChartConfig.data.labels = eventTypeLabels;
+        eventTypeChartConfig.data.datasets[0].data = eventsCountByEventType;
+
+        // Get the canvas elements and draw the charts
+        const severityCtx = document.getElementById('severityChart').getContext('2d');
+        severityChart = new Chart(severityCtx, severityChartCofig);
+        const eventTypeCtx = document.getElementById('eventTypeChart').getContext('2d');
+        eventTypeChart = new Chart(eventTypeCtx, eventTypeChartConfig);
+    }
 
         // Call getData() function when the page loads
         window.addEventListener('DOMContentLoaded', () => {
             fetch(`http://localhost:3000/data-times?start_date=${startDateInput}&end_date=${endDateInput}`)
                 .then((response) => response.json())
                 .then((data) => {
+                    
                     const dataContainer = document.getElementById('dataContainer');
                     // ... Existing code to display dataContainer
 
                     // Update the chart with the retrieved data
-                    updateSeverityChart(data);
+                    updateCharts(data);
+                    // updateSeverityChart(data);
+                    // updateEventTypeChart(data);
                 })
                 .catch((error) => {
                     console.error('Error:', error);

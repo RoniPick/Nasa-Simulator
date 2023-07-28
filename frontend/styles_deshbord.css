@@ -71,5 +71,7 @@ body {
 #dataContainerTable2 td,
 #dataContainerTable2 th {
   font-size: 14px; /* Adjust the font size to make it smaller */
-  padding: 4px; /* Adjust the padding to reduce cell spacing */
+  padding: 5px; /* Adjust the padding to reduce cell spacing */
 }
+
+
