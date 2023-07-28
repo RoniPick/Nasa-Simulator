@@ -122,6 +122,9 @@ http://localhost:3000/data-brightsTAR?start_date=6/27/23&end_date=6/28/23&bright
 app.get('/data-brightStar', (req, res) => {
   const elasticSearchEndpoint = 'https://r1x0rdsre0:anu5034q9c@events-data-1012553474.us-east-1.bonsaisearch.net:443/nasa*/_search';
   let { start_date, end_date, bright_star } = req.query
+  console.log("start_date", start_date);
+    console.log("end_date", end_date);
+    console.log("bright_star", bright_star);
   const curlCommand = `curl -X GET ${elasticSearchEndpoint} -d '{
         "query": {
           "bool": {
