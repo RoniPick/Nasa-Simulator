@@ -160,7 +160,7 @@
       searchResultsContainer.innerHTML = ''; // Clear previous search results
       if (searchResults.length === 0) {
         // Show a pop-up message if there are no search results
-        alert('No bright-star with this name');
+        alert('No results found. Please try again.');
         return;
       }
       searchResults.forEach(item => {
@@ -220,6 +220,11 @@
           return;
         }
         let url = "";
+        //check if start date is greater than end date
+        if (startDateInput > endDateInput) {
+          alert('Start date cannot be greater than end date.');
+          return;
+        }
 
         if (!informingFactorInput && !starInput) {
           url = `http://localhost:3000/data-times?start_date=${startDateInput}&end_date=${endDateInput}`;
