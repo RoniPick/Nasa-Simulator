@@ -4,8 +4,7 @@ const { getDataFromRedis } = require("./RedisService");
 
 /*
 Responsibilities:
-Generating random events
-Sending events to the Event Hub
+Generating random events and sending them to the Event Hub
 */
 async function sendEvent(eventBody) {
   try {
