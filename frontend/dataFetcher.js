@@ -17,7 +17,6 @@ function populateTableData(data, targetContainerId) {
     keys.forEach(key => {
       const cell = row.insertCell(); // Create a table data cell
       const valueSpan = document.createElement('span');
-      valueSpan.style.fontSize = 'smaller';
 
       if (key === 'location') {
         const location = item[key];
