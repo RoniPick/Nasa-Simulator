@@ -22,31 +22,31 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'dashboard.html'));
 });
 
-// Define a route for NASA
-// app.get('/nasa', async (req, res) => {
-//   try {
-//     const currentDate = new Date();
-//     const nextDate = new Date();
-//     nextDate.setDate(currentDate.getDate() + 1);
+//Define a route for NASA
+app.get('/nasa', async (req, res) => {
+  try {
+    const currentDate = new Date();
+    const nextDate = new Date();
+    nextDate.setDate(currentDate.getDate() + 1);
 
-//     const startDate = formatDate(currentDate);
-//     const endDate = formatDate(nextDate);
+    const startDate = formatDate(currentDate);
+    const endDate = formatDate(nextDate);
 
-//     const apiKey = '1uI4GbaJZKD9NooOyvHAc5RK54xdc6ifIKXCe8g9';
-//     const url = `https://api.nasa.gov/neo/rest/v1/feed?start_date=${startDate}&end_date=${endDate}&api_key=${apiKey}`;
+    const apiKey = '1uI4GbaJZKD9NooOyvHAc5RK54xdc6ifIKXCe8g9';
+    const url = `https://api.nasa.gov/neo/rest/v1/feed?start_date=${startDate}&end_date=${endDate}&api_key=${apiKey}`;
 
-//     const response = await axios.get(url);
-//     const data = response.data;
-//     console.log("data", data)
+    const response = await axios.get(url);
+    const data = response.data;
+    console.log("data", data)
 
-//     res.json(data);
-//   } catch (error) {
-//     console.error('Error:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-//   console.log("finished")
+    res.json(data);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+  console.log("finished")
 
-// });
+});
 
 // Define a route for scraping data from the main website
 app.get('/sun', (req, res) => {
