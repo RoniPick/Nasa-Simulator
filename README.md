@@ -1,4 +1,15 @@
-# Nasa-Simulator
+
+
+
+# Astronomical Events Portal
+
+The Astronomical Events Portal is a web application designed to provide users with real-time access to a curated collection of astronomical events and data. It serves as a central hub for astronomers, researchers, and space enthusiasts to explore, analyze, and visualize various celestial phenomena.
+Users can access the web application through a compatible web browser. They can explore the dashboard, search for specific events, visualize data, and receive real-time updates as they discover the wonders of our universe.
+
+### System Architecture
+![Nasa simulator](https://github.com/TalMalchi/Nasa-Simulator/assets/93086649/344ea40a-e4d7-4cec-bbc4-8b145ec99130)
+
+
 
 
 ### Backend
