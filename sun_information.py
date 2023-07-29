@@ -84,22 +84,22 @@ for index, table in enumerate(tables):
 
 ########## End of table ##########
 
-if not os.path.exists("urls"):
-    os.makedirs("urls")
-
-elements = driver.find_elements(By.CSS_SELECTOR, '.data.even, .data.odd')
-
-for index, element in enumerate(elements):
-    url = str(element.get_attribute('onclick'))
-    url = url.replace("document.location.href='", "https://theskylive.com/").replace("'", "")
-     # Check if the URL is not None
-    if url != "None":
-        filename = f"urls/url_{index}.txt"
-        with open(filename, 'w') as file:
-            file.write(url)
 
 
-########## End of URLs ##########
+# Scrape rise, transit, and set times
+rise_time_element = driver.find_element(By.CLASS_NAME, 'rise')
+transit_time_element = driver.find_element(By.CLASS_NAME, 'transit')
+set_time_element = driver.find_element(By.CLASS_NAME, 'set')
 
+# Get the values of rise, transit, and set times
+rise_time = rise_time_element.text
+transit_time = transit_time_element.text
+set_time = set_time_element.text
+
+# Create a file to save the times
+with open('times.txt', 'w') as file:
+    file.write(f"Rise: {rise_time}\n")
+    file.write(f"Transit: {transit_time}\n")
+    file.write(f"Set: {set_time}\n")
 driver.quit()
 print("Data scraping and saving completed.")
