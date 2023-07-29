@@ -20,7 +20,7 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), opti
 driver.get('https://theskylive.com/sun-info')
 
 # Create a folder for saving images
-os.makedirs('images', exist_ok=True)
+os.makedirs('frontend/images', exist_ok=True)
 
 # Find and save images with size above 20KB
 images = driver.find_elements(By.TAG_NAME, 'img')
@@ -39,7 +39,7 @@ for i, image in enumerate(images):
     image.fp.seek(0)  # Reset the file pointer to the beginning
 
     if image_size >= 20:
-        image_name = f'images/image{i + 1}.jpg'
+        image_name = f'frontend/images/image{i + 1}.jpg'
         image = image.convert('RGB')
         image.save(image_name, format='PNG')
 
@@ -50,8 +50,8 @@ import os
 import json
 
 # Create a "tables" folder if it doesn't exist
-if not os.path.exists("tables"):
-    os.makedirs("tables")
+if not os.path.exists("frontend/tables"):
+    os.makedirs("frontend/tables")
 
 # Find all tables on the page
 tables = driver.find_elements(By.XPATH, '//table/tbody')
@@ -77,7 +77,7 @@ for index, table in enumerate(tables):
             table_data.append(row_data)
 
     # Save the table data as a JSON file
-        filename = f"tables/table_{index}.json"
+        filename = f"frontend/tables/table_{index}.json"
         with open(filename, 'w') as file:
             json.dump(table_data, file)
 
@@ -97,7 +97,7 @@ transit_time = transit_time_element.text
 set_time = set_time_element.text
 
 # Create a file to save the times
-with open('times.txt', 'w') as file:
+with open('frontend/times.txt', 'w') as file:
     file.write(f"Rise: {rise_time}\n")
     file.write(f"Transit: {transit_time}\n")
     file.write(f"Set: {set_time}\n")
