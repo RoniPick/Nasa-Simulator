@@ -51,7 +51,7 @@ app.get('/nasa', async (req, res) => {
 // Define a route for scraping data from the main website
 app.get('/sun', (req, res) => {
   console.log("sun")
-  const pythonProcess = exec('python3 sun_information.py');
+  const pythonProcess = exec('python3 frontend/sun_information.py');
 
   pythonProcess.stdout.on('data', (data) => {
     console.log(`Python stdout: ${data}`);

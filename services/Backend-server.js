@@ -235,7 +235,7 @@ app.get('/data-times', (req, res) => {
 app.get('/redis', (req, res) => {
   const client = new Redis("redis://default:6603de326e414020a35aee64c592604a@engaging-flamingo-37264.upstash.io:37264");
   // upload BSC.json to Upstash
-  const jsonData = fs.readFileSync('./redis/BSC.json', 'utf-8');
+  const jsonData = fs.readFileSync('../backend/redis/BSC.json', 'utf-8');
   client.set('BSC', jsonData, (error, result) => {
     if (error) {
       console.log(error);
