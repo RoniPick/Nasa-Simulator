@@ -52,8 +52,27 @@
         .table-title {
             font-size: 18px;
             font-weight: bold;
-            color: white;
             margin-bottom: 10px;
+        }
+        .table-container {
+            margin-top: 30px;
+            margin-left: 50px;
+            color: white;
+        }
+
+        .table-container table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-container th, .table-container td {
+            border: 1px solid rgba(255, 192, 203, 0.7);
+            padding: 8px;
+            text-align: left;
+        }
+
+        .table-container th {
+            background-color: rgba(255, 192, 203, 0.7);
         }
     </style>
 </head>
@@ -150,13 +169,29 @@
                                 style="background-color: rgb(0, 0, 0, 0.3);"></canvas>
                         </div>
                     </div>
+                    <!-- Table column -->
+                    <div class="col-md-6 mb-4">
+                        <div class="table-container" style="font-family: 'Trebuchet MS', sans-serif; background-color: rgba(0, 0, 0, 0.3);">
+                            <table id="dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>Physical Parameter</th>
+                                        <th>Value</th>
+                                        <th>Relative to Earth</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- JSON data will be inserted here using JavaScript -->
+                                </tbody>
+                            </table>
+                            <h5 class="card-title" style="font-family: 'Trebuchet MS', sans-serif; font-size: x-large; color: #ddd;">Information about the sun</h5>
+
+                        </div>
+                    </div>
 
                 </div>
             </div>
         </div>
-
-        <!-- <canvas id="closeApproachChart" width="400" height="200"></canvas>
-        <canvas id="sunXChart" width="400" height="200"></canvas> -->
 
 
         <div id="dataContainer" class="d-flex flex-row flex-wrap" style="font-family: Monaco;"></div>
@@ -164,101 +199,134 @@
 
 
     <script>
+        
+         // JavaScript to fetch data from the "table_2.json" file and display it in the table
+         fetch('./table_2.json')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('#dataTable tbody');
+
+                // Create table rows with data from the JSON file
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    item.forEach(value => {
+                        const cell = document.createElement('td');
+                        cell.textContent = value;
+                        row.appendChild(cell);
+                    });
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching the JSON data:', error);
+            });
+            
+
         function processDataForGraph(data) {
-            // Extract distances from all the dates
-            const allDistances = [];
+            const distanceRanges = [5000000, 8000000, 10000000];
+            const distancesCount = [0, 0, 0, 0]; // Initialize counters for each range
+
             for (const date in data.near_earth_objects) {
                 const eventsForDate = data.near_earth_objects[date];
-                const distances = eventsForDate.map((item) => item.close_approach_data[0].miss_distance.kilometers);
-                allDistances.push(...distances);
+                for (const event of eventsForDate) {
+                const distance = event.close_approach_data[0].miss_distance.kilometers;
+                if (distance < distanceRanges[0]) {
+                    distancesCount[0]++;
+                } else if (distance < distanceRanges[1]) {
+                    distancesCount[1]++;
+                } else if (distance < distanceRanges[2]) {
+                    distancesCount[2]++;
+                } else {
+                    distancesCount[3]++;
+                }
+                }
             }
 
-            return allDistances;
-        }
+            return distancesCount;
+            }
 
+            function createDistanceDistributionGraph(data) {
+                const distancesCount = processDataForGraph(data);
+                const labels = ['Distance < 5,000,000', '5,000,000 <= Distance < 8,000,000', '8,000,000 <= Distance < 10,000,000', '10,000,000 <= Distance'];
 
-        // New function to create distance distribution graph
-        function createDistanceDistributionGraph(data) {
-            const distances = processDataForGraph(data);
-            const ctx = document.getElementById('distanceChart').getContext('2d');
+                const ctx = document.getElementById('distanceChart').getContext('2d');
 
-            const distanceChartConfig = {
-                type: 'bar',
-                data: {
-                    labels: distances,
+                const distanceChartConfig = {
+                    type: 'bar',
+                    data: {
+                    labels: labels,
                     datasets: [{
                         label: 'Number of Events',
-                        data: Array.from({ length: distances.length }, () => 1), // Assuming each distance occurs once
+                        data: distancesCount,
                         backgroundColor: 'rgba(255, 192, 203, 0.7)',
                         borderColor: 'rgba(255, 192, 203, 0.7)',
                         borderWidth: 1,
                     }],
-                },
-                options: {
+                    },
+                    options: {
                     scales: {
                         y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Number of Events',
-                                color: 'white',
-                                font: {
-                                    weight: 'bold',
-                                },
-                            },
-                            grid: {
-                                color: 'white',
-                                backgroundColor: 'white',
-                                borderWidth: 1,
-                                drawBorder: false,
-                            },
-                            ticks: {
-                                color: 'white',
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Events',
+                            color: 'white',
+                            font: {
+                            weight: 'bold',
                             },
                         },
+                        grid: {
+                            color: 'white',
+                            backgroundColor: 'white',
+                            borderWidth: 1,
+                            drawBorder: false,
+                        },
+                        ticks: {
+                            color: 'white',
+                        },
+                        },
                         x: {
-                            title: {
-                                display: true,
-                                text: 'Distance (kilometers)',
-                                color: 'white',
-                                font: {
-                                    weight: 'bold',
-                                },
+                        title: {
+                            display: true,
+                            text: 'Distance From Earth (km) in the past month',
+                            color: 'white',
+                            font: {
+                            weight: 'bold',
                             },
-                            grid: {
-                                color: 'white',
-                                backgroundColor: 'white',
-                                borderWidth: 1,
-                                drawBorder: false,
-                            },
-                            ticks: {
-                                color: 'white',
-                            },
+                        },
+                        grid: {
+                            color: 'white',
+                            backgroundColor: 'white',
+                            borderWidth: 1,
+                            drawBorder: false,
+                        },
+                        ticks: {
+                            color: 'white',
+                        },
                         },
                     },
                     plugins: {
                         legend: {
-                            labels: {
-                                color: 'white',
-                                font: {
-                                    weight: 'bold',
-                                },
+                        labels: {
+                            color: 'white',
+                            font: {
+                            weight: 'bold',
                             },
                         },
+                        },
                     },
-                },
-            };
+                    },
+                };
 
-            new Chart(ctx, distanceChartConfig);
-        }
+                new Chart(ctx, distanceChartConfig);
+                }
+
 
         // Call createDistanceDistributionGraph() function when the page loads
         window.addEventListener('DOMContentLoaded', () => {
             fetch('http://localhost:4001/nasa')
                 .then(response => response.json())
                 .then(data => {
-                    // Existing code to display the last five events in the table
-
                     // Create the distance distribution graph
                     createDistanceDistributionGraph(data);
                 })
@@ -338,6 +406,29 @@
                 });
         });
 
+        // Fetch the JSON file and populate the table
+        window.addEventListener('DOMContentLoaded', () => {
+            fetch('http://localhost:4001/sun')
+                .then(response => response.json())
+                .then(data => {
+                    const table = document.getElementById('sunTable');
+                    for (const [key, value] of Object.entries(data)) {
+                        //if the value or the key is empty dont add it to the table
+                        if (value == "" || key == "") {
+                            continue;
+                        }
+                        const row = table.insertRow();
+                        const cell1 = row.insertCell();
+                        const cell2 = row.insertCell();
+                        const firstWord = key.split(' ')[0];
+                        const restOfData = key.substring(firstWord.length).trim();
+                        cell1.textContent = firstWord;
+                        cell2.textContent = `${restOfData} ${value}`;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
         const startDateInput = "2023/07/06";
         const endDateInput = "2023/07/28";
 
@@ -413,12 +504,6 @@
 
 
         }
-
-        // // const closeApproachChartConfig = {
-        // // }
-
-        // // const sunXChartConfig = {
-        // // }
 
         const eventTypeChartConfig = {
             type: 'bar',
@@ -507,7 +592,7 @@
                 eventsCountBySeverity[severity - 1]++;
 
                 const eventTypeIndex = eventTypeLabels.indexOf(item.eventType);
-                console.log(item.eventType);
+                // console.log(item.eventType);
                 if (eventTypeIndex !== -1) {
                     eventsCountByEventType[eventTypeIndex]++;
                 }
@@ -535,12 +620,8 @@
                 .then((data) => {
 
                     const dataContainer = document.getElementById('dataContainer');
-                    // ... Existing code to display dataContainer
-
                     // Update the chart with the retrieved data
                     updateCharts(data);
-                    // updateSeverityChart(data);
-                    // updateEventTypeChart(data);
                 })
                 .catch((error) => {
                     console.error('Error:', error);

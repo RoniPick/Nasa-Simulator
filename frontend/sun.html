@@ -38,10 +38,11 @@
             margin-top: 30px;
             display: flex;
         }
+        
 
-        .image-container {
+        /* .image-container {
             text-align: center;
-        }
+        } */
 
         .image-container img {
             width: 400px;
@@ -49,6 +50,15 @@
             margin: 5px;
             border-radius: 5px;
             display: block;
+        }
+        .image-container {
+            display: flex; /* Use flexbox to create a horizontal layout */
+            justify-content: space-between; /* Add space between the images */
+        }
+
+        .image-item {
+            text-align: center;
+            width: 45%; /* Set the width of each image container */
         }
 
         .table-container {
@@ -71,6 +81,24 @@
             background-color: #f2f2f2;
         }
         
+        
+        #dataTable {
+            background-color: #f2f2f2; /* Set the background color */
+            color: #333; /* Set the text color */
+            border-collapse: collapse; /* Collapse the borders between cells */
+            width: 100%; /* Set the table width to 100% of its container */
+        }
+
+        #dataTable th, #dataTable td {
+            border: 1px solid black; /* Set the border color */
+            padding: 8px;
+            text-align: left;
+        }
+
+        #dataTable th {
+            background-color: rgba(0, 0, 0, 0.3); /* Set the background color for table headers */
+        }
+
         .image-container h6{
             text-align: left;
         }
@@ -89,23 +117,23 @@
 
     <ul class="nav nav-pills nav-fill">
         <li class="nav-item">
-            <a class="nav-link" href="dashboard.html">
-                <i class="fas fa-chart-bar"></i> Dashboard
+            <a class="nav-link" href="dashboard.html" style="color: azure;">
+                <i class="fas fa-chart-bar" style="color: azure;"></i> Dashboard
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="Astronomical_events.html">
-                <i class="fas fa-moon"></i> Astronomical events
+            <a class="nav-link" href="Astronomical_events.html" style="color: azure;">
+                <i class="fas fa-moon" style="color: azure;"></i> Astronomical events
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="nasa.html">
-                <i class="fas fa-rocket"></i> NASA
+            <a class="nav-link" href="nasa.html" style="color: azure;">
+                <i class="fas fa-rocket" style="color: azure;"></i> NASA
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="sun.html" data-toggle="pill">
-                <i class="fas fa-sun"></i> Sun
+            <a class="nav-link active" aria-current="page" href="sun.html" data-toggle="pill" style="color: azure;">
+                <i class="fas fa-sun" style="color: azure;"></i> Sun
             </a>
         </li>
     </ul>
@@ -113,40 +141,47 @@
     <div class="container">
         <div class="row mt-3">
             <div class="col-sm-12">
-                <h5 class="card-title">Astronomical Events Data</h5>
+                <h5 class="card-title" style="font-family: 'Trebuchet MS', sans-serif; font-size: xx-large;">Sun Events Data</h5>
                 <div class="image-container">
-                    <h6>Sun Spots:</h6>
-                    <img src="./images/image5.jpg" alt="Image 1">
-
-                    <h6>Sun Position:</h6>
-                    <img src="./images/image6.jpg" alt="Image 2">
-                    <h6>Sun Position:</h6>
-                    <img src="./images/image7.jpg" alt="Image 3">
+                    <div class="image-item">
+                        <h6 class="card-title" style="font-family: 'Trebuchet MS', sans-serif; font-size: x-large;">Sun Spots:</h6>
+                        <img src="./images/image5.jpg" alt="Sun Spots">
+                    </div>
+                    <div class="image-item">
+                        <h6 class="card-title" style="font-family: 'Trebuchet MS', sans-serif; font-size: x-large;">Sun Position:</h6>
+                        <img src="./images/image6.jpg" alt="Sun Position">
+                        <img src="./images/image7.jpg" alt="Sun Position">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <h5 class="card-title" style="font-family: 'Trebuchet MS', sans-serif; font-size: x-large;">
+                        Sun's time information </h5>
+                    <!-- <h5>Times Information</h5> -->
+                    <table id="timesData" style="font-family: 'Trebuchet MS', sans-serif; ">
+                        <!-- Times information will be inserted here using JavaScript -->
+                    </table>
                 </div>
 
-                <div class="col-sm-6">
-                    <h5>Times Information</h5>
-                    <div id="timesData">
-                        <!-- Times information will be inserted here using JavaScript -->
-                    </div>
+                <div class="table-container" style="font-family: 'Trebuchet MS', sans-serif;">
+                    <h5 class="card-title" style="font-family: 'Trebuchet MS', sans-serif; font-size: x-large;">
+                        Information about the sun</h5>
+                    <table id="dataTable">
+                        <thead>
+                            <tr>
+                                <th>Physical Parameter</th>
+                                <th>Value</th>
+                                <th>Relative to Earth</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- JSON data will be inserted here using JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
 
+               
             </div>
         </div>
-    </div>
-    <div class="table-container">
-        <h5>Table:</h5>
-        <table id="dataTable">
-            <thead>
-                <tr>
-                    <th>Physical Parameter</th>
-                    <th>Value</th>
-                    <th>Relative to Earth</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- JSON data will be inserted here using JavaScript -->
-            </tbody>
-        </table>
     </div>
     
     <script>
@@ -200,36 +235,6 @@
     </script>
     
 </body>
-
-    <!-- <div class="container">
-        <div class="row mt-3">
-            <div class="col-sm-12">
-                <h5 class="card-title">Astronomical Events Data</h5>
-                <div class="image-container">
-                    <h6>Sun Spots:</h6>
-
-                    <img src="./images/image5.jpg" alt="Image 1">
-                    <br>
-                    <br>
-                    <h6>Sun Position:</h6>
-                    <img src="./images/image6.jpg" alt="Image 2">
-                    
-                    <img src="./images/image7.jpg" alt="Image 3">
-
-                </div>
-                <div class="table-container">
-                    <h6>Table:</h6>
-                    <table id="sunTable">
-                        <tr>
-                            <th>Name</th>
-                            <th>Value</th>
-                        </tr>
-                    </table>
-                </div>
-
-            </div>
-        </div>
-    </div> -->
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
