@@ -122,38 +122,150 @@
                     <tbody></tbody>
                 </table>
             </div>
-                 <!-- Analytics title above the charts -->
-    <div class="row mt-3">
-        <div class="col-sm-12">
-            <h5 class="card-title text-center" style="color: rgba(255, 192, 203, 0.7); background-color: rgb(0, 0, 0, 0.3);  
+            <!-- Analytics title above the charts -->
+            <div class="row mt-3">
+                <div class="col-sm-12">
+                    <h5 class="card-title text-center" style="color: rgba(255, 192, 203, 0.7); background-color: rgb(0, 0, 0, 0.3);  
                         font-family: 'Trebuchet MS', sans-serif; font-size: 38px;">Analytics</h5>
-        </div>
-        <!-- Charts row -->
-    <div class="row mt-3">
-        <!-- Chart containers with some space between them -->
-        <div class="col-md-6 mb-4">
-            <div class="chart-container">
-                <canvas id="severityChart" width="500" height="300" style="background-color: rgb(0, 0, 0, 0.3);"></canvas>
+                </div>
+                <!-- Charts row -->
+                <div class="row mt-3">
+                    <!-- Chart containers with some space between them -->
+                    <div class="col-md-6 mb-4">
+                        <div class="chart-container">
+                            <canvas id="severityChart" width="500" height="300"
+                                style="background-color: rgb(0, 0, 0, 0.3);"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="chart-container">
+                            <canvas id="eventTypeChart" width="500" height="330"
+                                style="background-color: rgb(0, 0, 0, 0.3);"></canvas>
+                        </div>
+                    </div>
+                    <!-- Chart container -->
+                    <div class="col-md-6 mb-4">
+                        <div class="chart-container">
+                            <canvas id="distanceChart" width="500" height="300"
+                                style="background-color: rgb(0, 0, 0, 0.3);"></canvas>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
-        <div class="col-md-6 mb-4">
-            <div class="chart-container">
-                <canvas id="eventTypeChart" width="500" height="330" style="background-color: rgb(0, 0, 0, 0.3);"></canvas>
-            </div>
-        </div>
-    </div>
-    </div>
-        </div>
-        
+
         <!-- <canvas id="closeApproachChart" width="400" height="200"></canvas>
         <canvas id="sunXChart" width="400" height="200"></canvas> -->
-          
+
 
         <div id="dataContainer" class="d-flex flex-row flex-wrap" style="font-family: Monaco;"></div>
     </div>
 
 
     <script>
+        function processDataForGraph(data) {
+            // Extract distances from all the dates
+            const allDistances = [];
+            for (const date in data.near_earth_objects) {
+                const eventsForDate = data.near_earth_objects[date];
+                const distances = eventsForDate.map((item) => item.close_approach_data[0].miss_distance.kilometers);
+                allDistances.push(...distances);
+            }
+
+            return allDistances;
+        }
+
+
+        // New function to create distance distribution graph
+        function createDistanceDistributionGraph(data) {
+            const distances = processDataForGraph(data);
+            const ctx = document.getElementById('distanceChart').getContext('2d');
+
+            const distanceChartConfig = {
+                type: 'bar',
+                data: {
+                    labels: distances,
+                    datasets: [{
+                        label: 'Number of Events',
+                        data: Array.from({ length: distances.length }, () => 1), // Assuming each distance occurs once
+                        backgroundColor: 'rgba(255, 192, 203, 0.7)',
+                        borderColor: 'rgba(255, 192, 203, 0.7)',
+                        borderWidth: 1,
+                    }],
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Events',
+                                color: 'white',
+                                font: {
+                                    weight: 'bold',
+                                },
+                            },
+                            grid: {
+                                color: 'white',
+                                backgroundColor: 'white',
+                                borderWidth: 1,
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                color: 'white',
+                            },
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Distance (kilometers)',
+                                color: 'white',
+                                font: {
+                                    weight: 'bold',
+                                },
+                            },
+                            grid: {
+                                color: 'white',
+                                backgroundColor: 'white',
+                                borderWidth: 1,
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                color: 'white',
+                            },
+                        },
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'white',
+                                font: {
+                                    weight: 'bold',
+                                },
+                            },
+                        },
+                    },
+                },
+            };
+
+            new Chart(ctx, distanceChartConfig);
+        }
+
+        // Call createDistanceDistributionGraph() function when the page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            fetch('http://localhost:4001/nasa')
+                .then(response => response.json())
+                .then(data => {
+                    // Existing code to display the last five events in the table
+
+                    // Create the distance distribution graph
+                    createDistanceDistributionGraph(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
         // Call getData() function 
         window.addEventListener('DOMContentLoaded', () => {
             const url = 'http://localhost:3000/data-5events'; // Modify the URL accordingly
@@ -229,28 +341,28 @@
         const startDateInput = "2023/07/06";
         const endDateInput = "2023/07/28";
 
-        const severityChartCofig={
-                type: 'bar',
-                data: {
-                    id: 'severityChart',
-                    labels: ['1', '2', '3', '4', '5'], // Severity levels
-                    datasets: [{
-                        label: 'Number of Events',
-                        data: [0, 0, 0, 0, 0], // Number of events
-                        backgroundColor: 'rgba(255, 192, 203, 0.7)', // Change the background color to white with transparency
-                        borderColor: 'rgba(255, 192, 203, 0.7)', // Change the border color to white
-                        borderWidth: 1,
-                        color: 'white',
-                    }],
-                },
-                options: {
+        const severityChartCofig = {
+            type: 'bar',
+            data: {
+                id: 'severityChart',
+                labels: ['1', '2', '3', '4', '5'], // Severity levels
+                datasets: [{
+                    label: 'Number of Events',
+                    data: [0, 0, 0, 0, 0], // Number of events
+                    backgroundColor: 'rgba(255, 192, 203, 0.7)', // Change the background color to white with transparency
+                    borderColor: 'rgba(255, 192, 203, 0.7)', // Change the border color to white
+                    borderWidth: 1,
+                    color: 'white',
+                }],
+            },
+            options: {
                 scales: {
                     y: {
                         beginAtZero: true,
                         title: {
                             display: true,
                             text: 'Number of Events',
-                            color:'white',
+                            color: 'white',
                             font: {
                                 weight: 'bold',
                             }
@@ -270,11 +382,11 @@
                         title: {
                             display: true,
                             text: 'Severity Level',
-                            color:'white',
+                            color: 'white',
                             font: {
                                 weight: 'bold',
                             }
-                            
+
                         },
                         grid: {
                             color: 'white',
@@ -300,7 +412,7 @@
             },
 
 
-            }
+        }
 
         // // const closeApproachChartConfig = {
         // // }
@@ -313,7 +425,7 @@
             data: {
                 id: 'eventTypeChart',
                 labels: ['MMT', 'Gemini Observatory Telescopes', 'Very Large Telescope', 'Subaru Telescope', 'Large Binocular Telescope', 'Southern African Large Telescope',
-                'Keck 1 and 2', 'Hobby-Eberly Telescope', 'Gran Telescopio Canarias', 'The Giant Magellan Telescope', 'Thirty Meter Telescope', 'European Extremely Large Telescope'], // Event types
+                    'Keck 1 and 2', 'Hobby-Eberly Telescope', 'Gran Telescopio Canarias', 'The Giant Magellan Telescope', 'Thirty Meter Telescope', 'European Extremely Large Telescope'], // Event types
                 datasets: [{
                     label: 'Number of Events',
                     fontColor: 'white',
@@ -331,7 +443,7 @@
                         title: {
                             display: true,
                             text: 'Number of Events',
-                            color:'white',
+                            color: 'white',
                             font: {
                                 weight: 'bold',
                             }
@@ -351,11 +463,11 @@
                         title: {
                             display: true,
                             // text: 'Severity Level',
-                            color:'white',
+                            color: 'white',
                             font: {
                                 weight: 'bold',
                             }
-                            
+
                         },
                         grid: {
                             color: 'white',
@@ -382,46 +494,46 @@
         };
 
         function updateCharts(data) {
-        const severityLevels = [1, 2, 3, 4, 5];
-        const eventsCountBySeverity = Array(5).fill(0);
+            const severityLevels = [1, 2, 3, 4, 5];
+            const eventsCountBySeverity = Array(5).fill(0);
 
-        const eventTypeLabels = [
-        'GRB', 'Apparent Brightness Rise', 'UV Rise', 'X-Ray Rise', 'Comet'
-        ];
-        const eventsCountByEventType = Array(12).fill(0);
+            const eventTypeLabels = [
+                'GRB', 'Apparent Brightness Rise', 'UV Rise', 'X-Ray Rise', 'Comet'
+            ];
+            const eventsCountByEventType = Array(12).fill(0);
 
-        data.forEach((item) => {
-            const severity = item.severityLevel;
-            eventsCountBySeverity[severity - 1]++;
+            data.forEach((item) => {
+                const severity = item.severityLevel;
+                eventsCountBySeverity[severity - 1]++;
 
-            const eventTypeIndex = eventTypeLabels.indexOf(item.eventType);
-            console.log(item.eventType);
-            if (eventTypeIndex !== -1) {
-                eventsCountByEventType[eventTypeIndex]++;
-            }
-        });
+                const eventTypeIndex = eventTypeLabels.indexOf(item.eventType);
+                console.log(item.eventType);
+                if (eventTypeIndex !== -1) {
+                    eventsCountByEventType[eventTypeIndex]++;
+                }
+            });
 
 
 
-        severityChartCofig.data.labels = severityLevels;
-        severityChartCofig.data.datasets[0].data = eventsCountBySeverity;
+            severityChartCofig.data.labels = severityLevels;
+            severityChartCofig.data.datasets[0].data = eventsCountBySeverity;
 
-        eventTypeChartConfig.data.labels = eventTypeLabels;
-        eventTypeChartConfig.data.datasets[0].data = eventsCountByEventType;
+            eventTypeChartConfig.data.labels = eventTypeLabels;
+            eventTypeChartConfig.data.datasets[0].data = eventsCountByEventType;
 
-        // Get the canvas elements and draw the charts
-        const severityCtx = document.getElementById('severityChart').getContext('2d');
-        severityChart = new Chart(severityCtx, severityChartCofig);
-        const eventTypeCtx = document.getElementById('eventTypeChart').getContext('2d');
-        eventTypeChart = new Chart(eventTypeCtx, eventTypeChartConfig);
-    }
+            // Get the canvas elements and draw the charts
+            const severityCtx = document.getElementById('severityChart').getContext('2d');
+            severityChart = new Chart(severityCtx, severityChartCofig);
+            const eventTypeCtx = document.getElementById('eventTypeChart').getContext('2d');
+            eventTypeChart = new Chart(eventTypeCtx, eventTypeChartConfig);
+        }
 
         // Call getData() function when the page loads
         window.addEventListener('DOMContentLoaded', () => {
             fetch(`http://localhost:3000/data-times?start_date=${startDateInput}&end_date=${endDateInput}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    
+
                     const dataContainer = document.getElementById('dataContainer');
                     // ... Existing code to display dataContainer
 

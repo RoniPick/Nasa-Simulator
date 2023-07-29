@@ -151,9 +151,15 @@
         });
     }
 
+    function clearDataContainer() {
+      const dataContainer = document.getElementById('dataContainer');
+      dataContainer.innerHTML = '';
+    }
+
     // Call getData() function when the page loads
     window.addEventListener('DOMContentLoaded', getData);
     function displaySearchResults(searchResults) {
+      clearDataContainer();
       console.log("result" + searchResults);
       console.log("inside function");
       const searchResultsContainer = document.getElementById('searchResultsContainer');
@@ -210,6 +216,11 @@
         const endDateInput = document.getElementById('endDateInput').value;
         const informingFactorInput = document.getElementById('informingFactorInput').value;
 
+        console.log(starInput);
+        console.log(startDateInput);
+        console.log(endDateInput);
+        console.log(informingFactorInput);
+
         if (starInput && informingFactorInput) {
           alert('Please fill either "Bright Star" or "Informing Factor", not both.');
 
@@ -234,7 +245,7 @@
           url = `http://localhost:3000/data-informingFactors?start_date=${startDateInput}&end_date=${endDateInput}&informingFactor=${informingFactorInput}`;
         }
 
-        fetch(`http://localhost:3000/data-times?start_date=${startDateInput}&end_date=${endDateInput}`)
+        fetch(url)
           .then(response => {
             if (!response.ok) {
               throw new Error('Network response was not ok');
