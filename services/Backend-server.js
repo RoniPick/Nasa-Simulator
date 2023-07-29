@@ -1,10 +1,9 @@
-//node js serve
+
 
 const { exec } = require('child_process');
 const express = require('express');
 const pf = require('fs');
 
-//const pythonfile = exec('python -u sun_information.py');
 
 const app = express();
 const port = 3000;
@@ -27,8 +26,6 @@ app.use((req, res, next) => {
 
 // Define a route
 app.get('/', (req, res) => {
-  //res.send('Hello, World!');
-  // res.sendFile(path.join(__dirname, 'public', 'index.html'));
 
 });
 
@@ -105,10 +102,7 @@ app.get('/data-informingFactors', (req, res) => {
     console.log("Get data from ElasticSearch");
     try {
       const data = JSON.parse(stdout);
-      console.log("insdie try");
       console.log("Retrieved data from Elasticsearch:", stdout);
-      // const dataArrary = [[stdout]];
-      // res.json(dataArrary);
       res.json(data.hits.hits.map(hit => hit._source));
     } catch (e) {
       console.error("Error parsing data from Elasticsearch:", e);
@@ -123,9 +117,6 @@ http://localhost:3000/data-brightsTAR?start_date=6/27/23&end_date=6/28/23&bright
 app.get('/data-brightStar', (req, res) => {
   const elasticSearchEndpoint = 'https://r1x0rdsre0:anu5034q9c@events-data-1012553474.us-east-1.bonsaisearch.net:443/nasa*/_search';
   let { start_date, end_date, bright_star } = req.query
-  console.log("start_date", start_date);
-    console.log("end_date", end_date);
-    console.log("bright_star", bright_star);
   const curlCommand = `curl -X GET ${elasticSearchEndpoint} -d '{
         "size": 100,
         "query": {
@@ -163,16 +154,12 @@ app.get('/data-brightStar', (req, res) => {
     console.log("Get data from ElasticSearch");
     try {
       const data = JSON.parse(stdout);
-      console.log("insdie try");
       console.log("Retrieved data from Elasticsearch:", stdout);
-      // const dataArrary = [[stdout]];
-      // res.json(dataArrary);
       res.json(data.hits.hits.map(hit => hit._source));
     } catch (e) {
       console.error("Error parsing data from Elasticsearch:", e);
       res.status(500).send("Error parsing data from Elasticsearch");
     }
-    //res.end("Response: " + stdout.toString(),40);
   });
 
 });
@@ -218,10 +205,7 @@ app.get('/data-times', (req, res) => {
     console.log("Get data from ElasticSearch");
     try {
       const data = JSON.parse(stdout);
-      console.log("insdie try");
       console.log("Retrieved data from Elasticsearch:", stdout);
-      // const dataArrary = [[stdout]];
-      // res.json(dataArrary);
       res.json(data.hits.hits.map(hit => hit._source));
     } catch (e) {
       console.error("Error parsing data from Elasticsearch:", e);

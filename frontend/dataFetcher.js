@@ -38,17 +38,3 @@ function populateTableData(data, targetContainerId) {
   });
 }
 
-// // WebSocket connection
-// const socket = new WebSocket('ws://localhost:4000'); // Replace 'localhost:8080' with your WebSocket server URL
-
-// // Function to update the table with new data
-// function updateData(data) {
-//   const targetContainerId = 'dataContainerTable1'; // Modify the container ID accordingly
-//   populateTableData(data, targetContainerId);
-// }
-
-// // WebSocket event listener for receiving messages
-// socket.addEventListener('message', (event) => {
-//   const newData = JSON.parse(event.data);
-//   updateData(newData);
-// });

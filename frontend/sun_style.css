@@ -1,0 +1,87 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-image: url('solarSystem.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    overflow-y: auto;
+}
+
+.header {
+    text-align: center;
+    padding: 20px;
+    color: white;
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white background for container */
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 30px;
+    display: flex;
+}
+
+.image-container img {
+    width: 400px;
+    height: auto;
+    margin: 5px;
+    border-radius: 5px;
+    display: block;
+}
+.image-container {
+    display: flex; /* Use flexbox to create a horizontal layout */
+    justify-content: space-between; /* Add space between the images */
+}
+
+.image-item {
+    text-align: center;
+    width: 45%; /* Set the width of each image container */
+}
+
+.table-container {
+    margin-top: 30px;
+    margin-left: 50px;
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-container th, .table-container td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.table-container th {
+    background-color: #f2f2f2;
+}
+
+
+#dataTable {
+    background-color: #f2f2f2; /* Set the background color */
+    color: #333; /* Set the text color */
+    border-collapse: collapse; /* Collapse the borders between cells */
+    width: 100%; /* Set the table width to 100% of its container */
+}
+
+#dataTable th, #dataTable td {
+    border: 1px solid black; /* Set the border color */
+    padding: 8px;
+    text-align: left;
+}
+
+#dataTable th {
+    background-color: rgba(0, 0, 0, 0.3); /* Set the background color for table headers */
+}
+
+.image-container h6{
+    text-align: left;
+}
+.col-sm-6{
+    margin-top: 70px;
+}
