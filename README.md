@@ -28,7 +28,7 @@ The backend code consists of several services responsible for different tasks:
 ### Frontend
 The frontend application provides the following features:
 
-1. ***Dashboard:*** View the latest astronomical events and future astronomical events from NASA.
-2. ***Astronomical Events:*** Search for astronomical events based on various criteria such as bright star, informing factor, and date range.
+1. ***Dashboard:*** View the latest astronomical events, future astronomical events from NASA, analytics about the astronomical events and data about the sun.
+2. ***Astronomical Events:*** Search for astronomical events based on various criteria such as bright star, informing factor, and date range. 
 3. ***NASA Data:*** Explore data about near-earth objects and their close approach details.
 4. ***Sun:***  Leverages API to obtain detailed information about the Sun, including its current location, sunspots, time of rise and set, as well as fundamental properties such as mass and diameter.
