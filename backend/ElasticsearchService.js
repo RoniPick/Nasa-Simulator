@@ -3,6 +3,10 @@ const { exec } = require("child_process");
 /*
 Responsibilities:
 Executing a curl command to send events to Elasticsearch
+eventBody: The event to send to Elasticsearch
+context: used to update the checkpoint after successfully processing the event
+offset: used together with sequenceNumber to identify the position of the event within the event stream
+sequenceNumber: The sequence number of the event
 */
 async function sendEventToElasticSearch(eventBody, context, offset, sequenceNumber) {
   try {

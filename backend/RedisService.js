@@ -1,8 +1,7 @@
 const Redis = require("ioredis");
 
 /*
-Responsibilities:
-Retrieving data from Redis
+Responsibilities: Retrieving data from Redis
 */
 function getDataFromRedis(callback) {
   const redis = new Redis(

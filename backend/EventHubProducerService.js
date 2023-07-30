@@ -3,8 +3,7 @@ const { sendDataToEventHub } = require("./EventHubConsumerService");
 const { getDataFromRedis } = require("./RedisService");
 
 /*
-Responsibilities:
-Generating random events and sending them to the Event Hub
+Responsibilities: Generating random events and sending them to the Event Hub
 */
 async function sendEvent(eventBody) {
   try {
@@ -19,7 +18,7 @@ async function sendEvent(eventBody) {
 
     const eventData = { body: eventBody };
     console.log("Sending event:", eventData);
-    const batch = await eventHubProducerClient.createBatch();
+    const batch = await eventHubProducerClient.createBatch(); //allows to group multiple events together before sending them to the Event Hub. Can improve performance and reduce overhead when dealing with a large number of events.
     batch.tryAdd(eventData);
     await eventHubProducerClient.sendBatch(batch);
   } catch (error) {
