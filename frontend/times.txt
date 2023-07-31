@@ -1,6 +1,9 @@
-Rise: Azimuth: 71.1°
-RISE 5:18
-Transit: Max altitude: 57.3°
-TRANSIT 13:05
-Set: Azimuth: 288.7°
-SET 20:51
+Rise: Azimuth: 71.6°
+RISE
+5:21
+Transit: Max altitude: 56.9°
+TRANSIT
+13:05
+Set: Azimuth: 288.3°
+SET
+20:47
