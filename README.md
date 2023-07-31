@@ -32,3 +32,14 @@ The frontend application provides the following features:
 2. ***Astronomical Events:*** Search for astronomical events based on various criteria such as bright star, informing factor, and date range. 
 3. ***NASA Data:*** Explore data about near-earth objects and their close approach details.
 4. ***Sun:***  Leverages API to obtain detailed information about the Sun, including its current location, sunspots, time of rise and set, as well as fundamental properties such as mass and diameter.
+
+
+## Video of the Project:
+
+
+https://github.com/TalMalchi/Nasa-Simulator/assets/93086649/87847312-4818-43e9-9a8d-7569f7fa38ac
+
+
+
+
+
