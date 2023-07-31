@@ -2,9 +2,7 @@ const { EventHubConsumerClient } = require("@azure/event-hubs");
 const { sendEventToElasticSearch } = require("./ElasticsearchService");
 
 /*
-Responsibilities:
-Creating a consumer group for the Event Hub
-Subscribing to events and processing them
+Responsibilities: Creating a consumer group for the Event Hub,  subscribing to events and processing them,
 Sending processed events to Elasticsearch
 */
 async function createConsumerGroup() {
