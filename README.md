@@ -7,7 +7,7 @@ The Astronomical Events Portal is a web application designed to provide users wi
 Users can access the web application through a compatible web browser. They can explore the dashboard, search for specific events, visualize data, and receive real-time updates as they discover the wonders of our universe.
 
 ### System Architecture
-![Nasa simulator](https://github.com/TalMalchi/Nasa-Simulator/assets/93086649/344ea40a-e4d7-4cec-bbc4-8b145ec99130)
+![Nasa simulator (1)](https://github.com/TalMalchi/Nasa-Simulator/assets/93086649/eda5a3b6-e2ed-4e5d-9864-d6d6707aea13)
 
 
 
@@ -37,7 +37,10 @@ The frontend application provides the following features:
 ## Video of the Project:
 
 
-https://github.com/TalMalchi/Nasa-Simulator/assets/93086649/87847312-4818-43e9-9a8d-7569f7fa38ac
+
+
+
+https://github.com/TalMalchi/Nasa-Simulator/assets/93086649/1ed20cbf-5832-462a-96db-493926bc08f3
 
 
 
